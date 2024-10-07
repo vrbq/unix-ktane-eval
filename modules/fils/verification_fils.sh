@@ -12,6 +12,24 @@ fichier_a_verifier=$(base64 --decode .encoded_1)
 # Décoder et lire les fichiers initiaux
 fichiers_initiaux=($(base64 --decode .encoded_2))
 
+
+# Gestion des erreurs
+error_file=".error"
+
+if [[ -n "$fichier_a_supprimer" ]]; then
+    # Condition bonne, supprimer le fichier d'erreur s'il existe
+    [ -f "$error_file" ] && rm -f "$error_file"
+else
+    # Condition non bonne, incrémenter le compteur d'erreurs
+    if [ -f "$error_file" ]; then
+        error_count=$(cat "$error_file")
+        ((error_count++))
+    else
+        error_count=1
+    fi
+    echo "$error_count" > "$error_file"
+fi
+
 # Vérifier si le fichier a été supprimé
 if [[ ! -e "$fichier_a_verifier" ]]; then
     # Si le fichier à vérifier a été supprimé, vérifier que tous les autres fichiers initiaux sont encore là

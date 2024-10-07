@@ -1,17 +1,18 @@
 #!/bin/bash
 
 # Supprimer les fichiers temporaires précédents
-rm -f .mini_games_list .verifications log .stop_counter .countdown_expired .countdown_in_progress
+rm -f mini_games_list .verifications log .stop_counter .countdown_expired .countdown_in_progress error_status
 
-# Supprimer les fichiers .module_OK de tous les modules
-        if [ -f .modules_list ]; then
-            # Stocker le contenu du fichier .modules_list dans une variable
-            modules=$(cat .modules_list)
+# Supprimer les fichiers .module_OK et .can_go de tous les modules
+        if [ -f modules_list ]; then
+            # Stocker le contenu du fichier modules_list dans une variable
+            modules=$(cat modules_list)
 
             # Boucle à travers chaque module
             for module in $modules; do
                 module_ok_file="./modules/$module/.module_OK"
                 can_go_file="./modules/$module/.can_go"
+                error_file="./modules/$module/.error"
                 
                 if [ -f "$module_ok_file" ]; then
                     # Suppression de .module_OK
@@ -21,6 +22,11 @@ rm -f .mini_games_list .verifications log .stop_counter .countdown_expired .coun
                 if [ -f "$can_go_file" ]; then
                     # Suppression de .can_go
                     rm "$can_go_file"
+                fi
+
+                if [ -f "$error_file" ]; then
+                    # Suppression de .can_go
+                    rm "$error_file"
                 fi
             done
         fi
@@ -78,11 +84,11 @@ else
 fi
 
 # Fichier contenant la liste des modules
-mini_games_list=".modules_list"
+mini_games_list="modules_list"
 
-# Vérifier si le fichier .modules_list existe
+# Vérifier si le fichier modules_list existe
 if [ -f "$mini_games_list" ]; then
-    # Stocker le contenu du fichier .modules_list dans une variable
+    # Stocker le contenu du fichier modules_list dans une variable
     modules=$(cat "$mini_games_list")
 
     # Boucle à travers chaque module
@@ -106,15 +112,13 @@ touch .log
 # Lancer le script de génération de serial
 ./generate_seed.sh &
 
-# Lancer le check du status de la bombe
-./check_bomb_status.sh &
 
 # Liste des mini-jeux à résoudre
 mini_games=("fils")  # Exemple d'autres mini-jeux
 
 # Sauvegarder la liste dans un fichier caché
 for game in "${mini_games[@]}"; do
-    echo "$game" >> .mini_games_list
+    echo "$game" >> mini_games_list
 done
 
 # Lancer le script de compte à rebours en arrière-plan
@@ -124,4 +128,29 @@ if [ -f countdown.sh ]; then
     echo "in progress" > ./.countdown_in_progress
 else
     echo "Le script countdown.sh n'existe pas."
+fi
+
+# Lancer le check du status de la bombe
+./check_bomb_status.sh &
+
+# Boucle tant que le processus check_bomb_status.sh n'est pas trouvé
+check_status_pid=$(ps aux | grep '[c]heck_bomb_status.sh' | awk '{print $2}')
+attempt_count=0
+max_attempts=3
+
+while [ -z "$check_status_pid" ] && [ $attempt_count -lt $max_attempts ]; do
+    # Utiliser ps aux pour trouver le processus check_bomb_status.sh
+    check_status_pid=$(ps aux | grep '[c]heck_bomb_status.sh' | awk '{print $2}')
+
+    if [ -z "$check_status_pid" ]; then
+        # Relancer le processus si non trouvé
+        ./check_bomb_status.sh &
+        sleep 1  # Attendre une seconde avant de réessayer
+        ((attempt_count++))  # Incrémenter le compteur de tentatives
+    fi
+done
+
+# Si le processus est trouvé, sauvegarder le PID
+if [ -z "$check_status_pid" ]; then
+     echo "Impossible de lancer correctement la bombe"
 fi

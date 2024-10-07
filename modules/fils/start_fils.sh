@@ -14,73 +14,83 @@ rm -f .encoded_2  # Supprimer le fichier de liste des fichiers initiaux s'il exi
 # Tableau de couleurs
 couleurs=("rouge" "jaune" "noir" "bleu" "vert" "blanc")
 
-# Fonction pour sélectionner une couleur avec des probabilités spécifiques
-select_color() {
-    local index=$1
-    local random_num=$((RANDOM % 100))
-
-    if [[ $index -eq 1 ]]; then
-        # Premier fichier : Plus de chances d'avoir du rouge
-        if [[ $random_num -lt 60 ]]; then
-            echo "rouge"
-        else
-            echo "${couleurs[RANDOM % ${#couleurs[@]}]}"
-        fi
-    elif [[ $index -eq 2 ]]; then
-        # Deuxième fichier : Chances égales pour toutes les couleurs
-        echo "${couleurs[RANDOM % ${#couleurs[@]}]}"
-    elif [[ $index -eq 3 ]]; then
-        # Troisième fichier : Plus de chances d'avoir du bleu
-        if [[ $random_num -lt 50 ]]; then
-            echo "bleu"
-        else
-            echo "${couleurs[RANDOM % ${#couleurs[@]}]}"
-        fi
-    elif [[ $index -eq 4 ]]; then
-        # Quatrième fichier : Plus de chances d'avoir du jaune
-        if [[ $random_num -lt 60 ]]; then
-            echo "jaune"
-        else
-            echo "${couleurs[RANDOM % ${#couleurs[@]}]}"
-        fi
-    fi
-}
-
-# Générer les fichiers (3 ou 4) avec des couleurs spécifiques
-generate_files() {
-    local num_files=$1
-    fichiers=()
-
-    for ((i = 1; i <= num_files; i++)); do
-        couleur=$(select_color $i)
-        nom_fichier="${i}_${couleur}.txt"
-        
-        # Créer le fichier
-        touch "$nom_fichier"
-        fichiers+=("$nom_fichier")
-    done
-}
-
-
 # 1. Choisir aléatoirement entre 3 et 4 fichiers
-# nombre_de_fichiers=$((RANDOM % 2 + 3))  # Génère 3 ou 4 fichiers
-nombre_de_fichiers=4
+nombre_de_fichiers=$((RANDOM % 2 + 3))  # Génère 3 ou 4 fichiers
 
 # 2. Initialiser le tableau pour stocker les fichiers générés
 fichiers=()
 
-# Générer les fichiers avec des probabilités spécifiques
+
+# 3. Générer des fichiers aléatoires selon le nombre choisi
 for i in $(seq 1 $nombre_de_fichiers); do
-    if [[ $nombre_de_fichiers -eq 4 ]]; then
-        generate_files 4
-    else
-       generate_files 3
+    couleur=${couleurs[RANDOM % ${#couleurs[@]}]}  # Couleur aléatoire
+
+    # Assigner des probabilités pour les 3 fichiers
+    if [[ $nombre_de_fichiers -eq 3 ]]; then
+        if [[ $i -eq 1 ]]; then
+            # Premier fil (60% bleu, 30% rouge, 10% autre)
+            random_num=$((RANDOM % 100))
+            if [[ $random_num -lt 60 ]]; then
+                couleur="bleu"
+            elif [[ $random_num -lt 90 ]]; then
+                couleur="rouge"
+            fi
+        elif [[ $i -eq 2 ]]; then
+            # Deuxième fil (50% rouge, 40% bleu, 10% autre)
+            random_num=$((RANDOM % 100))
+            if [[ $random_num -lt 50 ]]; then
+                couleur="rouge"
+            elif [[ $random_num -lt 90 ]]; then
+                couleur="bleu"
+            fi
+        elif [[ $i -eq 3 ]]; then
+            # Dernier fil (40% blanc, 20% rouge, 20% bleu, 20% autre)
+            random_num=$((RANDOM % 100))
+            if [[ $random_num -lt 40 ]]; then
+                couleur="blanc"
+            elif [[ $random_num -lt 60 ]]; then
+                couleur="rouge"
+            elif [[ $random_num -lt 80 ]]; then
+                couleur="bleu"
+            fi
+        fi
+    elif [[ $nombre_de_fichiers -eq 4 ]]; then
+        if [[ $i -eq 1 ]]; then
+                # Premier fil (plus de chance d'avoir du rouge)
+                random_num=$((RANDOM % 100))
+                if [[ $random_num -lt 60 ]]; then
+                    couleur="rouge"
+                fi
+        elif [[ $i -eq 2 ]]; then
+                # Deuxième fil (chances égales pour toutes les couleurs)
+                couleur=${couleurs[RANDOM % ${#couleurs[@]}]}
+                if [[ $random_num -lt 30 ]]; then
+                    couleur="bleu"
+                fi
+        elif [[ $i -eq 3 ]]; then
+                # Troisième fil (40% rouge, 20% bleu, 20% jaune, 20% autre)
+                random_num=$((RANDOM % 100))
+                if [[ $random_num -lt 40 ]]; then
+                couleur="rouge"
+                elif [[ $random_num -lt 60 ]]; then
+                    couleur="bleu"
+                elif [[ $random_num -lt 80 ]]; then
+                    couleur="jaune"
+                fi
+        elif [[ $i -eq 4 ]]; then
+                # Quatrième fil (plus de chance d'avoir du jaune)
+                random_num=$((RANDOM % 100))
+                if [[ $random_num -lt 60 ]]; then
+                    couleur="jaune"
+                fi
+        fi
     fi
 
     nom_fichier="${i}_${couleur}.txt"
     touch "$nom_fichier"
     fichiers+=("$nom_fichier")
 done
+
 
 # Règles pour les conditions de victoire
 # 4. Lecture du numéro de série
@@ -144,9 +154,15 @@ fi
 if [[ $nombre_de_fichiers -eq 4 ]]; then
     # Compter les fils rouges
     count_red=0
+    count_bleu=0
+    count_jaune=0
     for fichier in "${fichiers[@]}"; do
         if [[ "$fichier" =~ "_rouge.txt" ]]; then
             ((count_red++))
+        elif [[ "$fichier" =~ "_bleu.txt" ]]; then
+            ((count_bleu++))
+        elif [[ "$fichier" =~ "_jaune.txt" ]]; then
+            ((count_jaune++))
         fi
     done
 
@@ -165,24 +181,23 @@ if [[ $nombre_de_fichiers -eq 4 ]]; then
         condition_a_verifier="Le dernier fil est jaune et il n'y a pas de fil rouge. Vous devez supprimer le premier fichier."
         fichier_a_supprimer="${fichiers[0]}"
 
-    # Condition 3 : plus d'un fil jaune
+    # Condition 3 : exactement un fil bleu
+    elif [[ $count_bleu -eq 1 ]]; then
+        condition_a_verifier="Il y a exactement un fil bleu. Vous devez couper le premier fichier."
+        fichier_a_supprimer="${fichiers[0]}"
+
+    # Condition 4 : plus d'un fil jaune
+    elif [[ $count_jaune -gt 1 ]]; then
+        condition_a_verifier="Il y a plus d'un fil jaune. Vous devez couper le dernier fichier."
+        fichier_a_supprimer="${fichiers[-1]}"
+
+    # Condition 5 : couper le deuxième fichier
     else
-        count_jaune=0
-        for fichier in "${fichiers[@]}"; do
-            if [[ "$fichier" =~ "_jaune.txt" ]]; then
-                ((count_jaune++))
-            fi
-        done
-        if [[ $count_jaune -gt 1 ]]; then
-            condition_a_verifier="Il y a plus d'un fil jaune. Vous devez couper le dernier fichier."
-            fichier_a_supprimer="${fichiers[-1]}"
-        else
-            # Condition 4 : couper le deuxième fichier
-            condition_a_verifier="Aucune autre condition remplie. Vous devez couper le deuxième fichier."
-            fichier_a_supprimer="${fichiers[1]}"
-        fi
+        condition_a_verifier="Aucune autre condition remplie. Vous devez couper le deuxième fichier."
+        fichier_a_supprimer="${fichiers[1]}"
     fi
 fi
+
 
 # 7. Afficher et encoder le fichier à supprimer
 if [[ -n "$fichier_a_supprimer" ]]; then
