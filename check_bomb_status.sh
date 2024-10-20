@@ -20,57 +20,36 @@ update_error_status() {
     echo "$current_total_errors / $max_errors" > "$error_status_file"
 }
 
-stop_the_bomb_failed() {
-    # Supprimer les fichiers .module_OK et .can_go de tous les modules
-        if [ -f modules_list ]; then
-            # Stocker le contenu du fichier modules_list dans une variable
-            modules=$(cat modules_list)
 
-            # Boucle à travers chaque module
-            for module in $modules; do
-                can_go_file="./modules/$module/.can_go"
-                
-                if [ -f "$can_go_file" ]; then
-                    # Suppression de .can_go
-                    rm "$can_go_file"
-                fi
-            done
-        fi
+stop_the_bomb() {
 
-        exit 0
-        break
-}
-
-stop_the_bomb_nailed() {
+        echo "BOOM, DOMMAGE !" > .stop_counter
     
-        # Supprimer les fichiers .module_OK de tous les modules
-        if [ -f modules_list ]; then
-            # Stocker le contenu du fichier modules_list dans une variable
-            modules=$(cat modules_list)
+        # Stocker le contenu du fichier modules_list dans une variable
+        modules=$(cat modules_list)
 
-           
-            # Boucle à travers chaque module
-            for module in $modules; do
-                module_ok_file="./modules/$module/.module_OK"
-                can_go_file="./modules/$module/.can_go"
-                error_file="./modules/$module/.error"
-                
-                if [ -f "$module_ok_file" ]; then
-                    # Suppression de .module_OK
-                    rm "$module_ok_file"
-                fi
-                
-                if [ -f "$can_go_file" ]; then
-                    # Suppression de .can_go
-                    rm "$can_go_file"
-                fi
+        
+        # Boucle à travers chaque module
+        for module in $modules; do
+            module_ok_file="./modules/$module/.module_OK"
+            can_go_file="./modules/$module/.can_go"
+            error_file="./modules/$module/.error"
+            
+            if [ -f "$module_ok_file" ]; then
+                # Suppression de .module_OK
+                rm "$module_ok_file"
+            fi
+            
+            if [ -f "$can_go_file" ]; then
+                # Suppression de .can_go
+                rm "$can_go_file"
+            fi
 
-                if [ -f "$error_file" ]; then
-                    # Suppression de .can_go
-                    rm "$error_file"
-                fi
-            done
-        fi
+            if [ -f "$error_file" ]; then
+                # Suppression de .can_go
+                rm "$error_file"
+            fi
+        done
 
         # Vérifier s'il y a un processus check_bomb_status en cours et l'arrêter
         if [ -f .check_status_pid ]; then
@@ -128,10 +107,13 @@ check_errors_in_modules() {
                 # Mettre à jour le fichier error_status
                 update_error_status "$total_errors"
 
+                echo "Vous avez fait une erreur dans le module $module. Total des erreurs : $total_errors sur $max_errors possible !" 
+
                 # Si le nombre total d'erreurs dépasse le maximum, la partie est perdue
                 if [[ $total_errors -ge $max_errors ]]; then
                     echo "Vous avez atteint le nombre maximum d'erreurs. Partie perdue."
-                    stop_the_bomb_failed
+                    echo "Dommage, il vous restait encore $(cat $time_file) pour désamorcer la bombe."
+                    stop_the_bomb
                     exit 1
                 fi
             fi
@@ -177,7 +159,7 @@ while true; do
         echo "Le compte à rebours est terminé, mais la bombe n'a pas été désamorcée." &
         rm -f mini_games_list 
 
-        stop_the_bomb_failed
+        stop_the_bomb
     fi
 
     # Vérifier si tous les modules sont désamorcés
@@ -193,7 +175,7 @@ while true; do
         # Supprimer les fichiers temporaires précédents
         rm -f mini_games_list
 
-        stop_the_bomb_nailed
+        stop_the_bomb
 
     fi
 
