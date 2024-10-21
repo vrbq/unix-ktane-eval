@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Durée du compte à rebours en secondes
-initial_time=$((1 * 60))  # Exemple : 5 minutes
+initial_time=$((10 * 60))  # Exemple : 5 minutes
 
 # Nom du fichier contenant la liste des mini-jeux
 mini_games_list=".mini_games_list"

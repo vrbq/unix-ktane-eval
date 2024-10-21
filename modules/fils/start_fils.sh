@@ -201,7 +201,7 @@ fi
 
 # 7. Afficher et encoder le fichier à supprimer
 if [[ -n "$fichier_a_supprimer" ]]; then
-    echo "$condition_a_verifier (Fichier à supprimer : $fichier_a_supprimer)"
+    # echo "$condition_a_verifier (Fichier à supprimer : $fichier_a_supprimer)"
     
     # Encoder et écrire dans .encoded_1
     echo "$fichier_a_supprimer" | base64 > .encoded_1
