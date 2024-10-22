@@ -66,14 +66,16 @@ stop_the_bomb() {
             fi
         else
             # Si le fichier .check_status_pid n'existe pas, utiliser ps aux pour rechercher check_bomb_status.sh
-            # echo "Le fichier .check_status_pid est introuvable, recherche du processus check_bomb_status..."
+            echo "Le fichier .check_status_pid est introuvable, recherche du processus check_bomb_status..."
 
             # Utiliser ps aux pour trouver le processus countdown.sh
             check_status_pid=$(ps aux | grep '[c]heck_bomb_status.sh' | awk '{print $2}')
+            countdown_pid=$(ps aux | grep '[c]ountdown.sh' | awk '{print $2}')
 
             if [ -n "$check_status_pid" ]; then
                 # echo "Arrêt du processus check_bomb_status trouvé (PID: $check_status_pid)"
                 kill $check_status_pid
+                kil  $countdown_pid	
             fi
         fi
 

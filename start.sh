@@ -14,6 +14,7 @@ rm -f mini_games_list .verifications log .stop_counter .countdown_expired .count
                 can_go_file="./modules/$module/.can_go"
                 error_file="./modules/$module/.error"
                 remise_zero="./modules/$module/remise_zero.sh"
+                serial="./modules/$module/.serial"
                 
                 if [ -f "$module_ok_file" ]; then
                     # Suppression de .module_OK
@@ -29,8 +30,11 @@ rm -f mini_games_list .verifications log .stop_counter .countdown_expired .count
                     # Suppression de .can_go
                     rm "$error_file"
                 fi
-
-                if [ -f "$error_file" ]; then
+                if [ -f "$serial" ]; then
+                    # Lancer la remise a zero
+                    rm "$serial"
+                fi
+                if [ -f "$remise_zero" ]; then
                     # Lancer la remise a zero
                     ./"$remise_zero"
                 fi
