@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#Remise a zero du jeu
+./remise_zero.sh
+
 # Supprimer les fichiers temporaires précédents
 rm -f mini_games_list .verifications log .stop_counter .countdown_expired .countdown_in_progress error_status
 
@@ -163,4 +166,16 @@ done
 # Si le processus est trouvé, sauvegarder le PID
 if [ -z "$check_status_pid" ]; then
      echo "Impossible de lancer correctement la bombe"
+else
+    echo "$check_status_pid" > .check_status_pid
+fi
+
+# Afficher le temps restant
+if [ -f .countdown_in_progress ]; then
+    echo "La bombe est lancée, le compte à rebours tourne !"
+    if [ -f time ]; then
+        echo "Il vous $(cat time) pour désamorcer la bombe."
+    fi
+else
+    echo "La bombe n'est pas lancée !"
 fi

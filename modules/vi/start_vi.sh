@@ -43,11 +43,8 @@ citations=(
     "\"L'avenir appartient à ceux qui croient à la beauté de leurs rêves.\" - Eleanor Roosevelt"
 )
 
-
-
     # Choisir un nombre de citations entre 5 et 20
     nb_citations=$((RANDOM % 16 + 5))
-    echo "" > citations
 
     # Sélectionner les citations aléatoirement et les écrire dans le fichier
     for i in $(seq 1 $nb_citations); do
@@ -161,6 +158,7 @@ modifications=()
 # Définir le fichier de citations
 citation_file="citations"
 num_citations=$(wc -l < "$citation_file")
+echo "Nombre de citations : $num_citations"
 
 # Vérifiez si le fichier de citations est vide
 if [[ $num_citations -eq 0 ]]; then
@@ -184,11 +182,16 @@ get_unique_line() {
     done
 }
 
+
 # Obtenir les lignes uniques pour les modifications
 line_remove=$(get_unique_line)
+echo "Ligne à supprimer : $line_remove"
 line_rename=$(get_unique_line)
+echo "Ligne à renommer : $line_rename"
 line_remove_quotes=$(get_unique_line)
+echo "Ligne pour supprimer les guillemets : $line_remove_quotes"
 line_remove_author=$(get_unique_line)
+echo "Ligne pour supprimer le nom d'auteur : $line_remove_author"
 
 # Copier le fichier de citations
 temp_file="temp_citation.txt"
@@ -204,10 +207,8 @@ modifications+=("Supprimer le nom d'auteur de la ligne $line_remove_author")
 
 # Créer un fichier pour enregistrer les modifications
 modifications_file=".encoded_3"
-printf "%s\n" "${modifications[@]}" > "$modifications_file"
-base64 "$modifications_file" > "$modifications_file.b64"
-rm "$modifications_file"  # Supprimer le fichier brut après encodage
-
+printf "%s\n" "${modifications[@]}" | base64 > "$modifications_file"
+printf "%s\n" "${fichiers[@]}" | base64 > .encoded_2
 
 # Appliquer les modifications sur le fichier copié
 # 1. Supprimer la ligne
