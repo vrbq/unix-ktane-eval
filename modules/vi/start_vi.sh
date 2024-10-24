@@ -43,8 +43,8 @@ citations=(
     "\"L'avenir appartient à ceux qui croient à la beauté de leurs rêves.\" - Eleanor Roosevelt"
 )
 
-    # Choisir un nombre de citations entre 5 et 20
-    nb_citations=$((RANDOM % 16 + 5))
+    # Choisir un nombre de citations entre 6 et 20
+    nb_citations=$((RANDOM % 16 + 6))
 
     # Sélectionner les citations aléatoirement et les écrire dans le fichier
     for i in $(seq 1 $nb_citations); do
@@ -113,34 +113,16 @@ determine_directory_name() {
     echo "$directory"
 }
 
-
-# Générer les instructions de modifications aléatoires
-generate_modifications() {
-    nb_modifications=$((RANDOM % 3 + 2))
-    modifications=("Supprimer la ligne X" "Renommer la ligne X en ligne Y"
-                   "Supprimer les guillemets de la ligne X"
-                   "Supprimer le nom d'auteur de la ligne X"
-                   "Ne laisser que le nom de l'auteur de la ligne X")
-    
-    instructions=()
-    lines=($(seq 1 $nb_citations))
-    for i in $(seq 1 $nb_modifications); do
-        mod=${modifications[$RANDOM % ${#modifications[@]}]}
-        line=${lines[$RANDOM % ${#lines[@]}]}
-        instructions+=("$mod $line")
-        lines=(${lines[@]/$line}) # Supprimer la ligne choisie
-    done
-    echo "${instructions[@]}"
-}
-
 # Créer le fichier "encoded" en base64
 create_encoded_file() {
     animal=$(determine_animal_name)
     directory=$(determine_directory_name)
-    modifications=$(generate_modifications)
 
-    echo -e "$animal\n$directory\n$modifications" | base64 > .encoded
+    echo -e "$animal\n$directory" | base64 > .encoded
 }
+
+# Générer fichier verif renommage
+create_encoded_file
 
 # Générer le fichier de citations
 generate_citations
@@ -155,10 +137,29 @@ directory=$(determine_directory_name)
 
 # Générer les instructions cachées
 modifications=()
+
 # Définir le fichier de citations
 citation_file="citations"
+
+# Créer un fichier pour enregistrer les modifications
+modifications_file=".encoded_3_temp"
+
+# Fichier temporaire pour garder les indices des lignes choisies
+CHOSEN_FILE=".encoded_4"
+
+# Supprimer le fichier des indices choisis s'il existe
+if [ -f "$CHOSEN_FILE" ]; then
+    rm "$CHOSEN_FILE"
+fi
+
+# Créer un nouveau fichier vide pour les indices choisis
+touch "$CHOSEN_FILE"
+
+# Fichier contenant le dernier numéro de série
+SERIAL_FILE=".serial"
+
+# Compter le nombre de citations
 num_citations=$(wc -l < "$citation_file")
-echo "Nombre de citations : $num_citations"
 
 # Vérifiez si le fichier de citations est vide
 if [[ $num_citations -eq 0 ]]; then
@@ -166,67 +167,114 @@ if [[ $num_citations -eq 0 ]]; then
     exit 1
 fi
 
-# Choisir des lignes uniques
-declare -A selected_lines
+# Fichier contenant le dernier numéro de série
+SERIAL_FILE=".serial"
+# Fichier temporaire pour garder les indices des lignes choisies
+CHOSEN_FILE=".encoded_4"
 
-# Fonction pour obtenir une ligne unique
-get_unique_line() {
-    local line
+# Supprimer le fichier des indices choisis s'il existe
+if [ -f "$CHOSEN_FILE" ]; then
+    rm "$CHOSEN_FILE"
+fi
+
+# Créer un nouveau fichier vide pour les indices choisis
+touch "$CHOSEN_FILE"
+
+# Lire le dernier numéro de série
+if [ -f "$SERIAL_FILE" ]; then
+    SERIAL=$(cat .serial)
+    LAST_SERIAL=${SERIAL: -1}
+    
+    # Extraire uniquement les chiffres de la dernière ligne
+    LAST_SERIAL=$(echo "$LAST_SERIAL" | grep -o '[0-9]*' | tail -n 1)  # Prendre le dernier nombre
+else
+    echo "Le fichier .serial n'existe pas."
+    LAST_SERIAL=0  # Si le fichier n'existe pas, on suppose 0
+fi
+
+# Vérifier si LAST_SERIAL est un entier
+if ! [[ "$LAST_SERIAL" =~ ^[0-9]+$ ]]; then
+    echo "Le dernier numéro de série n'est pas un entier. Utilisation de 0 par défaut."
+    LAST_SERIAL=0
+fi
+
+# Tableau pour garder les indices des lignes choisies
+chosen_indices=()
+
+
+# Fonction pour obtenir une citation aléatoire
+get_random_citation() {
+    # Compter le nombre de lignes dans le fichier
+    total_lines=$(wc -l < "$citation_file")
+
+    # Lire les indices choisis depuis le fichier
+    chosen_indices=($(cat "$CHOSEN_FILE"))
+
+    # Vérifier s'il reste des lignes à choisir
+    if [ "${#chosen_indices[@]}" -ge "$total_lines" ]; then
+        echo "Toutes les citations ont été choisies."
+        return 1
+    fi
+
     while true; do
-        line=$((RANDOM % num_citations + 1))
-        if [[ -z ${selected_lines[$line]} ]]; then
-            selected_lines[$line]=1
-            echo $line
-            return
+        # Générer un nombre aléatoire entre 1 et total_lines
+        random_index=$((RANDOM % total_lines + 1))
+
+        # Vérifier si cette ligne a déjà été choisie ou si elle est égale au dernier numéro de série
+        if [[ ! " ${chosen_indices[@]} " =~ " ${random_index} " ]] && [[ "$random_index" -ne "$LAST_SERIAL" ]]; then
+            chosen_indices+=("$random_index")  # Ajouter à la liste des indices choisis
+            echo "$random_index"  # Retourner le numéro de la ligne
+
+            # Sauvegarder les indices choisis dans le fichier
+            printf "%s\n" "${chosen_indices[@]}" > "$CHOSEN_FILE"
+
+            return 0
         fi
     done
 }
 
 
 # Obtenir les lignes uniques pour les modifications
-line_remove=$(get_unique_line)
-echo "Ligne à supprimer : $line_remove"
-line_rename=$(get_unique_line)
-echo "Ligne à renommer : $line_rename"
-line_remove_quotes=$(get_unique_line)
-echo "Ligne pour supprimer les guillemets : $line_remove_quotes"
-line_remove_author=$(get_unique_line)
-echo "Ligne pour supprimer le nom d'auteur : $line_remove_author"
+line_remove=$(get_random_citation)
+printf "Ligne à supprimer : $line_remove\n" > "$modifications_file"
+
+line_rename=$(get_random_citation)
+printf "Ligne à renommer : $line_rename par le dernier chiffre du serial : $LAST_SERIAL\n" >> "$modifications_file"
+
+line_remove_quotes=$(get_random_citation)
+printf "Ligne pour supprimer les guillemets : $line_remove_quotes\n" >> "$modifications_file"
+
+line_remove_author=$(get_random_citation)
+printf "Ligne pour supprimer le nom d'auteur : $line_remove_author\n"  >> "$modifications_file"
+
+base64 $modifications_file > .encoded_3
+rm $modifications_file
+
+# Supprimer le fichier des indices choisis après utilisation
+rm "$CHOSEN_FILE"
 
 # Copier le fichier de citations
 temp_file="temp_citation.txt"
 cp "$citation_file" "$temp_file"
 
 
-# Enregistrer les modifications à apporter
-modifications=()
-modifications+=("Supprimer la ligne $line_remove")
-modifications+=("Renommer la ligne $line_rename en ligne $((line_rename + 1))")
-modifications+=("Supprimer les guillemets de la ligne $line_remove_quotes")
-modifications+=("Supprimer le nom d'auteur de la ligne $line_remove_author")
+# 1. Renommer le numéro de la ligne par le dernier chiffre du serial
+line_content=$(sed -n "${line_rename}p" "$temp_file") # Récupérer le contenu de la ligne
+# Remplacer le numéro actuel par le dernier chiffre du serial
+updated_line_content=$(echo "$line_content" | sed -E "s/^[0-9]+\./$LAST_SERIAL./")
 
-# Créer un fichier pour enregistrer les modifications
-modifications_file=".encoded_3"
-printf "%s\n" "${modifications[@]}" | base64 > "$modifications_file"
-printf "%s\n" "${fichiers[@]}" | base64 > .encoded_2
+# Remplacer la ligne d'origine par la ligne modifiée
+sed -i "${line_rename}s/.*/$updated_line_content/" "$temp_file"
 
-# Appliquer les modifications sur le fichier copié
-# 1. Supprimer la ligne
-sed -i "${line_remove}d" "$temp_file"
-
-# 2. Renommer la ligne (ajouter un nouveau numéro)
-line_content=$(sed -n "${line_rename}p" "$temp_file")
-sed -i "${line_rename}d" "$temp_file"
-# Insérer la ligne à la nouvelle position
-mv "$temp_file" "$temp_file.bak"  # Créer une sauvegarde
-awk -v new_line_number=$((line_rename + 1)) -v content="$line_content" 'NR==new_line_number{print content; next} 1' "$temp_file.bak" > "$temp_file"
-rm "$temp_file.bak"  # Supprimer la sauvegarde
-
-# 3. Supprimer les guillemets de la ligne
+# 2. Supprimer les guillemets de la ligne
 sed -i "${line_remove_quotes}s/\"//g" "$temp_file"
 
-# 4. Supprimer le nom d'auteur de la ligne
-sed -i "${line_remove_author}s/ - .*$//" "$temp_file"
+# 3. Supprimer le nom d'auteur de la ligne
+sed -i "/^${line_remove_author}\. /s/ - .*/ - /" "$temp_file"
+
+# Appliquer les modifications sur le fichier copié
+# 4. Supprimer la ligne
+sed -i "${line_remove}d" "$temp_file"
 
 
 
@@ -237,4 +285,6 @@ base64 "$temp_file" > "$encoded_file"
 # Nettoyage : Supprimer le fichier temporaire
 rm "$temp_file"
 
-echo "Modifications appliquées et encodées dans le fichier $encoded_file."
+# echo "Modifications appliquées et encodées dans le fichier $encoded_file."
+
+echo "Le mini-jeu a bien été lancé !"
