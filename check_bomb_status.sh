@@ -20,7 +20,6 @@ update_error_status() {
     echo "$current_total_errors / $max_errors" > "$error_status_file"
 }
 
-
 stop_the_bomb() {
 
         echo "BOOM, DOMMAGE !" > .stop_counter

@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# Vérifier si .can_go existe avant de commencer
+if [ ! -f ".can_go" ]; then
+    echo "La bombe n'a pas été lancée !"
+    exit 1
+fi
+
+serial=$(cat .serial)
+    
+# Vérifier que le serial n'est pas vide
+if [ -z "$serial" ]; then
+    echo "Erreur : le fichier .serial est vide."
+    exit 1
+fi
+
+
 # Remise a zero du jeu
 ./remise_zero.sh
 
@@ -113,23 +128,14 @@ determine_directory_name() {
     echo "$directory"
 }
 
-# Créer le fichier "encoded" en base64
-create_encoded_file() {
-    animal=$(determine_animal_name)
-    directory=$(determine_directory_name)
-
-    echo -e "$animal\n$directory" | base64 > .encoded
-}
-
-# Générer fichier verif renommage
-create_encoded_file
-
 # Générer le fichier de citations
 generate_citations
 
 # Déterminer l'animal et le répertoire
-animal=$(determine_animal_name)
+filename=$(determine_animal_name)
 directory=$(determine_directory_name)
+
+echo -e "$filename\n$directory" | base64 > .encoded
 
 # # Créer le fichier de citation et le répertoire
 # mkdir -p "$directory"

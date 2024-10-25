@@ -3,9 +3,6 @@
 # Durée du compte à rebours en secondes
 initial_time=$((10 * 60))  # Exemple : 5 minutes
 
-# Nom du fichier contenant la liste des mini-jeux
-mini_games_list=".mini_games_list"
-
 # Nom du fichier d'actualisation du temps
 time_file="time"
 

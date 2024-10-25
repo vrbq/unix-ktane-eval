@@ -23,10 +23,7 @@ fichiers_initiaux=($(base64 --decode .encoded_2))
 # Gestion des erreurs
 error_file=".error"
 
-if [[ -n "$fichier_a_supprimer" ]]; then
-    # Condition bonne, supprimer le fichier d'erreur s'il existe
-    [ -f "$error_file" ] && rm -f "$error_file"
-else
+if [[ -z "$fichier_a_supprimer" ]]; then
     # Condition non bonne, incrémenter le compteur d'erreurs
     if [ -f "$error_file" ]; then
         error_count=$(cat "$error_file")

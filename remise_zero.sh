@@ -1,36 +1,19 @@
 # Supprimer les fichiers temporaires précédents
 
-rm -f mini_games_list .verifications log .stop_counter .countdown_expired .countdown_in_progress error_status time
+rm -f mini_games_list
+rm -f verifications
+rm -f .log
+rm -f .stop_counter
+rm -f .countdown_expired
+rm -f .countdown_in_progress
+rm -f error_status
+rm -f time
+rm -f serial
+rm -f category
+rm -f log
+rm -f .check_status_pid
 
 stop_the_bomb() {
-
-        echo "BOOM, DOMMAGE !" > .stop_counter
-    
-        # Stocker le contenu du fichier modules_list dans une variable
-        modules=$(cat modules_list)
-
-        
-        # Boucle à travers chaque module
-        for module in $modules; do
-            module_ok_file="./modules/$module/.module_OK"
-            can_go_file="./modules/$module/.can_go"
-            error_file="./modules/$module/.error"
-            
-            if [ -f "$module_ok_file" ]; then
-                # Suppression de .module_OK
-                rm "$module_ok_file"
-            fi
-            
-            if [ -f "$can_go_file" ]; then
-                # Suppression de .can_go
-                rm "$can_go_file"
-            fi
-
-            if [ -f "$error_file" ]; then
-                # Suppression de .can_go
-                rm "$error_file"
-            fi
-        done
 
         # Vérifier s'il y a un processus check_bomb_status en cours et l'arrêter
         if [ -f .check_status_pid ]; then
@@ -56,7 +39,7 @@ stop_the_bomb() {
             if [ -n "$check_status_pid" ]; then
                 # echo "Arrêt du processus check_bomb_status trouvé (PID: $check_status_pid)"
                 kill $check_status_pid
-                kil  $countdown_pid	
+                kill  $countdown_pid	
             fi
         fi
 
@@ -64,46 +47,49 @@ stop_the_bomb() {
         break
 }
 
-# Supprimer les fichiers .module_OK et .can_go de tous les modules
-        if [ -f modules_list ]; then
-            # Stocker le contenu du fichier modules_list dans une variable
-            modules=$(cat modules_list)
+# Supprimer les fichiers de tous les modules
+if [ -f modules_list ]; then
+    # Parcourir chaque ligne du fichier
+    while IFS= read -r module || [[ -n "$module" ]]; do
+        # Vérifier si la ligne n'est pas vide
+        if [[ -n "$module" ]]; then
+            # Faire quelque chose avec chaque module
+            echo "Remise a zero : $module"
+            
+            module_ok_file="./modules/$module/.module_OK"
+            can_go_file="./modules/$module/.can_go"
+            error_file="./modules/$module/.error"
+            remise_zero="./modules/$module/remise_zero.sh"
+            serial="./modules/$module/.serial"
+            
+            if [ -f "$module_ok_file" ]; then
+                # Suppression de .module_OK
+                rm "$module_ok_file"
+            fi
+            
+            if [ -f "$can_go_file" ]; then
+                # Suppression de .can_go
+                rm "$can_go_file"
+            fi
 
-            # Boucle à travers chaque module
-            for module in $modules; do
-                module_ok_file="./modules/$module/.module_OK"
-                can_go_file="./modules/$module/.can_go"
-                error_file="./modules/$module/.error"
-                remise_zero="./modules/$module/remise_zero.sh"
-                serial="./modules/$module/.serial"
-                
-                if [ -f "$module_ok_file" ]; then
-                    # Suppression de .module_OK
-                    rm "$module_ok_file"
-                fi
-                
-                if [ -f "$can_go_file" ]; then
-                    # Suppression de .can_go
-                    rm "$can_go_file"
-                fi
-
-                if [ -f "$error_file" ]; then
-                    # Suppression de .can_go
-                    rm "$error_file"
-                fi
-                if [ -f "$serial" ]; then
-                    # Lancer la remise a zero
-                    rm "$serial"
-                fi
-                if [ -f "$remise_zero" ]; then
-                    # Lancer la remise a zero
-                    ./"$remise_zero"
-                fi
-            done
+            if [ -f "$error_file" ]; then
+                # Suppression de .can_go
+                rm "$error_file"
+            fi
+            if [ -f "$serial" ]; then
+                # Lancer la remise a zero
+                rm "$serial"
+            fi
+            if [ -f "$remise_zero" ]; then
+                # Lancer la remise a zero
+                ./"$remise_zero"
+            fi
         fi
-
+    done < modules_list
+else
+    echo "Le fichier modules_list n'existe pas."
+fi
 
 stop_the_bomb
 
-rm -f .stop_counter
 
