@@ -60,11 +60,6 @@ if [[ -z "$fichier_a_supprimer" ]]; then
     echo "$error_count" > "$error_file"
 fi
 
-# Convertir la chaîne de fichiers d'origine en tableau
-# read -r -a fichiers_origine_array <<< "$fichiers_origine"
-# echo "Fichiers originaux : ${fichiers_origine[@]}"
-# echo "Fichier à supprimer : $fichier_a_verifier"
-
 # Vérifier si le fichier a été supprimé
 if [[ ! -e "$fichier_a_verifier" ]]; then
     # Initialiser un drapeau pour vérifier si d'autres fichiers sont encore présents

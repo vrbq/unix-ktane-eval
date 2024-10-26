@@ -14,9 +14,17 @@ if [ -z "$serial" ]; then
     exit 1
 fi
 
-
 # Remise a zero du jeu
 ./remise_zero.sh
+
+# Enregistrer l'heure de début (en secondes depuis l'époque Unix)
+start_time=$(date +%s)
+
+# Vérifier si le fichier .start_time existe déjà
+if [[ ! -f .start_time ]]; then
+    start_time=$(date +%s)
+    echo $start_time > .start_time
+fi
 
 # Générer un fichier texte de citations numérotées
 generate_citations() {

@@ -34,11 +34,13 @@ fi
 touch .log
 
 # Liste des mini-jeux à résoudre
-mini_games=("fils")  # Exemple d'autres mini-jeux
+mini_games=("fils" "vi") 
 
 # Sauvegarder la liste dans un fichier caché
 for game in "${mini_games[@]}"; do
+    # Afficher le nom du mini-jeu en cours
     # echo "Lancement du mini-jeu : $game"
+    # Écrire le nom du mini-jeu dans le fichier
     echo "$game" >> mini_games_list
 done
 

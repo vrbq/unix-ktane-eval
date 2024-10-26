@@ -9,6 +9,31 @@ encoded_file=".encoded_2"
 # Fichier de comptabilisation des erreurs
 error_file=".error"
 
+# Fonction pour vérifier le temps écoulé
+function verifier_temps_ecoule() {
+    # Lire l'heure de début enregistrée
+    if [[ -f .start_time ]]; then
+        start_time=$(cat .start_time)
+        end_time=$(date +%s)
+        elapsed_time=$((end_time - start_time))
+        
+        # Convertir le temps écoulé en minutes et secondes
+        minutes=$((elapsed_time / 60))
+        seconds=$((elapsed_time % 60))
+
+        # Afficher le temps écoulé
+        echo "Le module vi a été résolu en $minutes minutes et $seconds secondes."
+
+        # Enregistrer le temps total dans le fichier .final_time
+        echo "$minutes minutes et $seconds secondes" > .final_time
+        
+        # Supprimer le fichier de l'heure de début pour éviter les conflits
+        rm .start_time
+    else
+        echo "L'heure de début n'a pas été enregistrée."
+    fi
+}
+
 # Initialiser le compteur d'erreurs s'il n'existe pas
 if [ ! -f "$error_file" ]; then
     echo 0 > "$error_file"
@@ -19,6 +44,7 @@ increment_error() {
     current_errors=$(cat "$error_file")
     new_errors=$((current_errors + 1))
     echo "$new_errors" > "$error_file"
+    echo "Sur le module Vi, vous avez fait $(cat "$error_file") erreur(s)."
 }
 
 # Décoder le fichier "encoded" pour obtenir le chemin
@@ -47,13 +73,30 @@ fi
 
 # Décoder le fichier .encoded_2 pour obtenir le contenu attendu
 decoded_content=$(base64 -d "$encoded_file")
+expected_file=".expected_content"
+
+# Créer un fichier temporaire pour le contenu du joueur
+echo "$decoded_content" > "$expected_file"
 
 # Comparer le contenu décodé avec le contenu du fichier du joueur
-if [ "$decoded_content" != "$(cat "$joueur_file")" ]; then
-    echo "Le contenu du fichier modifié ne correspond pas à l'original."
+diff_output=$(diff "$expected_file" "$joueur_file")
+differences_count=$(echo "$diff_output" | wc -l)
+echo "Nombre de différences : $differences_count"
+
+# Vérifier le nombre d'erreurs
+current_errors=$(cat "$error_file")
+
+if [[ $differences_count -ge 2 ]]; then
     increment_error
+    echo "Le contenu du fichier modifié ne correspond pas aux modifications souhaitées."
+    echo "Nombre de différences : $differences_count"
     exit 1
+else
+    # echo "Le fichier modifié est considéré comme correct malgré les différences."
+    echo "Le fichier modifié est correct ! Félicitations !"
+    verifier_temps_ecoule
 fi
 
-echo "Le fichier modifié est correct."
+# Nettoyer le fichier temporaire
+rm "$expected_file"
 exit 0

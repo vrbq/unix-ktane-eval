@@ -6,6 +6,14 @@ if [ ! -f ".can_go" ]; then
     exit 1
 fi
 
+serial=$(cat .serial)
+# Vérifier que le serial n'est pas vide
+if [ -z "$serial" ]; then
+    echo "Erreur : le fichier .serial est vide."
+    exit 1
+fi
+
+
 # Remise a zero du jeu
 ./remise_zero.sh
 
