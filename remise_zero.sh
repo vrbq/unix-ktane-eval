@@ -47,6 +47,8 @@ stop_the_bomb() {
         break
 }
 
+original_dir="$(pwd)"
+
 # Supprimer les fichiers de tous les modules
 if [ -f modules_list ]; then
     # Parcourir chaque ligne du fichier
@@ -54,13 +56,14 @@ if [ -f modules_list ]; then
         # Vérifier si la ligne n'est pas vide
         if [[ -n "$module" ]]; then
             # Faire quelque chose avec chaque module
-            echo "Remise a zero : $module"
+            # echo "Remise a zero : $module"
             
             module_ok_file="./modules/$module/.module_OK"
             can_go_file="./modules/$module/.can_go"
             error_file="./modules/$module/.error"
             remise_zero="./modules/$module/remise_zero.sh"
             serial="./modules/$module/.serial"
+            start_time="./modules/$module/.start_time"
             
             if [ -f "$module_ok_file" ]; then
                 # Suppression de .module_OK
@@ -80,9 +83,17 @@ if [ -f modules_list ]; then
                 # Lancer la remise a zero
                 rm "$serial"
             fi
+            if [ -f "$start_time" ]; then
+                # Lancer la remise a zero
+                rm "$start_time"
+            fi
             if [ -f "$remise_zero" ]; then
                 # Lancer la remise a zero
-                ./"$remise_zero"
+                # ./"$remise_zero"
+                cd "./modules/$module"
+                ./remise_zero.sh
+                # Revenir au répertoire d'origine
+                cd "$original_dir" || exit
             fi
         fi
     done < modules_list

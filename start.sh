@@ -38,7 +38,7 @@ mini_games=("fils")  # Exemple d'autres mini-jeux
 
 # Sauvegarder la liste dans un fichier caché
 for game in "${mini_games[@]}"; do
-    echo "Lancement du mini-jeu : $game"
+    # echo "Lancement du mini-jeu : $game"
     echo "$game" >> mini_games_list
 done
 
