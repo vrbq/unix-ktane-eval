@@ -78,10 +78,38 @@ expected_file=".expected_content"
 # Créer un fichier temporaire pour le contenu du joueur
 echo "$decoded_content" > "$expected_file"
 
-# Comparer le contenu décodé avec le contenu du fichier du joueur
-diff_output=$(diff "$expected_file" "$joueur_file")
-differences_count=$(echo "$diff_output" | wc -l)
-echo "Nombre de différences : $differences_count"
+# Compter les différences
+differences_count=0
+
+# Lire les fichiers ligne par ligne
+exec 3<"$expected_file"
+exec 4<"$joueur_file"
+
+while true; do
+    # Lire une ligne de chaque fichier
+    IFS= read -r -u 3 expected_line
+    IFS= read -r -u 4 joueur_line
+
+    # Si les deux fichiers sont à la fin, sortir de la boucle
+    if [[ -z "$expected_line" && -z "$joueur_line" ]]; then
+        break
+    fi
+
+    # Vérifier si les lignes sont différentes
+    if [[ "$expected_line" != "$joueur_line" ]]; then
+        # echo "Différence trouvée :"
+        # echo "Attendu : $expected_line"
+        # echo "Joueur : $joueur_line"
+        ((differences_count++))
+    fi
+done
+
+# Fermer les descripteurs de fichier
+exec 3<&-
+exec 4<&-
+
+# Afficher le nombre total de différences
+# echo "Nombre total de différences : $differences_count"
 
 # Vérifier le nombre d'erreurs
 current_errors=$(cat "$error_file")
@@ -89,11 +117,12 @@ current_errors=$(cat "$error_file")
 if [[ $differences_count -ge 2 ]]; then
     increment_error
     echo "Le contenu du fichier modifié ne correspond pas aux modifications souhaitées."
-    echo "Nombre de différences : $differences_count"
+    # echo "Nombre de différences : $differences_count"
     exit 1
 else
     # echo "Le fichier modifié est considéré comme correct malgré les différences."
     echo "Le fichier modifié est correct ! Félicitations !"
+    echo "Module fils désamorcé" > ./.module_OK  # Crée un fichier de flag pour arrêter le compteur
     verifier_temps_ecoule
 fi
 

@@ -43,8 +43,6 @@ fichier_a_verifier=$(base64 --decode .encoded_1)
 
 # Décoder et lire les fichiers initiaux
 fichiers_origine=($(base64 --decode .encoded_2))
-echo "Fichiers initiaux : ${fichiers_origine[@]}"
-
 
 # Gestion des erreurs
 error_file=".error"
@@ -80,7 +78,7 @@ if [[ ! -e "$fichier_a_verifier" ]]; then
         echo "Bravo ! Vous avez supprimé le bon fichier ($fichier_a_verifier) !"
         echo "Module fils désamorcé" > ./.module_OK  # Crée un fichier de flag pour arrêter le compteur
         verifier_temps_ecoule
-        [ -f "$error_file" ] && rm -f "$error_file"
+        # [ -f "$error_file" ] && rm -f "$error_file"
     else
         echo "FAILED ! Vous avez supprimé d'autres fichiers que celui requis : $fichier_a_verifier."
         echo "Relancez un nouveau module fils."

@@ -171,7 +171,7 @@ while true; do
         else
             time_remaining="Temps non disponible"
         fi
-        echo "Bravo, vous avez désamorcé la bombe avec $time_remaining restant !" &
+        echo "Bravo, vous avez désamorcé la bombe avec $time_remaining restant et $total_errors erreurs !" &
         echo "PAS BOOM, BRAVO !" > .stop_counter
         # Supprimer les fichiers temporaires précédents
         rm -f mini_games_list
