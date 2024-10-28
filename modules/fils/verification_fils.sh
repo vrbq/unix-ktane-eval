@@ -27,6 +27,9 @@ function verifier_temps_ecoule() {
         
         # Supprimer le fichier de l'heure de début pour éviter les conflits
         rm .start_time
+
+        # Rajouter le temps dans le .module_OK
+        echo "$minutes minutes et $seconds secondes" >> .module_OK
     else
         echo "L'heure de début n'a pas été enregistrée."
     fi
@@ -76,7 +79,7 @@ if [[ ! -e "$fichier_a_verifier" ]]; then
 
     if $tous_les_autres_fichiers_intacts; then
         echo "Bravo ! Vous avez supprimé le bon fichier ($fichier_a_verifier) !"
-        echo "Module fils désamorcé" > ./.module_OK  # Crée un fichier de flag pour arrêter le compteur
+        echo "Module désamorcé" > ./.module_OK  # Crée un fichier de flag pour arrêter le compteur
         verifier_temps_ecoule
         # [ -f "$error_file" ] && rm -f "$error_file"
     else
