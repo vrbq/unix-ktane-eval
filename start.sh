@@ -1,18 +1,81 @@
 #!/bin/bash
 
+
+# Fonction pour afficher l'aide
+function afficher_aide() {
+    echo "Utilisation : $0 [options]"
+    echo "Options :"
+    echo "  --test-module  Exécute le module de test."
+    echo "  --help         Affiche cette aide."
+}
+
+# Vérifier les arguments
+if [[ "$1" == "--help" ]]; then
+    afficher_aide
+    exit 0
+elif [[ "$1" == "--test-module" ]]; then
+    echo "Exécution du module de test..."
+
+    # Charger les noms dans un tableau, en utilisant les retours à la ligne comme séparateurs
+    mapfile -t mini_game_names < modules_list  # Remplace les retours à la ligne par des espaces
+    
+   # Fonction pour afficher la liste des noms
+    function afficher_noms {
+        echo "Choisissez un nom parmi la liste suivante :"
+        for i in "${!mini_game_names[@]}"; do
+            echo "$((i + 1)). ${mini_game_names[i]}"
+        done
+    }
+
+    # Demande de choix
+    while true; do
+        afficher_noms
+        read -p "Entrez le numéro du nom choisi : " choix
+        index=$((choix - 1))
+
+        # Vérifier si le choix est valide
+        if [[ $index -ge 0 && $index -lt ${#mini_game_names[@]} ]]; then
+            nom="${mini_game_names[index]}"
+            echo "Vous avez choisi : $nom"
+            mini_games=($nom) 
+            break  # Sortir de la boucle
+        else
+            echo "Sélection invalide. Veuillez choisir un numéro de la liste."
+        fi
+    done
+
+    # Placez ici le code pour exécuter le module de test
+    # par exemple, appeler une fonction ou un autre script
+else
+    # Liste des mini-jeux à résoudre
+    mini_games=("fils" "vi" "size") 
+    echo "Option inconnue : $1"
+fi
+
+
 #Remise a zero du jeu
 ./remise_zero.sh
 
 # Lancer le script de génération de serial
 ./generate_seed.sh
 
-# Fichier contenant la liste des modules
-mini_games_list="modules_list"
+
+# Sauvegarder la liste dans un fichier caché
+for game in "${mini_games[@]}"; do
+    # Afficher le nom du mini-jeu en cours
+    echo "Lancement du mini-jeu : $game"
+    # Écrire le nom du mini-jeu dans le fichier
+    echo "$game" >> mini_games_list
+done
+
+echo "Liste des mini-jeux sauvegardée dans mini_games_list : $(cat mini_games_list)"
+
 
 # Vérifier si le fichier modules_list existe
-if [ -f modules_list ]; then
+if [ -f mini_games_list ]; then
     # Parcourir chaque ligne du fichier
     while IFS= read -r module || [[ -n "$module" ]]; do
+        echo "Module : $module"
         # Vérifier si la ligne n'est pas vide
         if [[ -n "$module" ]]; then
         # Extraire uniquement les lettres (caractères alphabétiques)
@@ -25,24 +88,13 @@ if [ -f modules_list ]; then
                 # echo "Fichier .can_go créé dans le module : $module_name"
             fi
         fi
-    done < modules_list
+    done < mini_games_list
 else
     echo "Le fichier modules_list n'existe pas."
 fi
 
 # Créer un nouveau fichier log vide
 touch .log
-
-# Liste des mini-jeux à résoudre
-mini_games=("fils" "vi") 
-
-# Sauvegarder la liste dans un fichier caché
-for game in "${mini_games[@]}"; do
-    # Afficher le nom du mini-jeu en cours
-    # echo "Lancement du mini-jeu : $game"
-    # Écrire le nom du mini-jeu dans le fichier
-    echo "$game" >> mini_games_list
-done
 
 # Lancer le script de compte à rebours en arrière-plan
 if [ -f countdown.sh ]; then
