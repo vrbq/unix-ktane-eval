@@ -127,7 +127,7 @@ setup_game() {
 
 
     # Écrit la question dans le fichier
-    echo "Quel fichier fait cette taille : $FILESIZE ?" > question
+    echo "Quel est le chiffre présent dans le nom du fichier faisant  $FILESIZE octets ?" > question
 
     # Encode le nom du fichier en base64 et le stocke dans ".encoded"
     echo -n "$FILENUMBER" | base64 > .encoded
