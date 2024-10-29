@@ -11,6 +11,7 @@ rm -f .encoded_2  # Supprimer le fichier de liste des fichiers initiaux s'il exi
 
 # Vérifier si l'option --hard a été fournie
 if [[ "$1" == "--hard" ]]; then
-    rm -f .start_time 
+    rm -f .start_time
+    rm -f .serial
     rm -f .error      # Supprimer le fichier d'erreurs s'il existe
 fi

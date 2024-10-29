@@ -76,6 +76,15 @@ if [ -f mini_games_list ]; then
     # Parcourir chaque ligne du fichier
     while IFS= read -r module || [[ -n "$module" ]]; do
         echo "Module : $module"
+        # Si le module est le module "internet"
+        if [[ "$module" == "internet" ]]; then
+            # Copier un gif dans le répertoire du module
+            src="./utils/morse"
+            dest="./modules/internet"
+            gif=$(find "$src" -name "*.gif" | shuf -n 1)
+            cp "$gif" "$dest"
+        fi
+
         # Vérifier si la ligne n'est pas vide
         if [[ -n "$module" ]]; then
         # Extraire uniquement les lettres (caractères alphabétiques)

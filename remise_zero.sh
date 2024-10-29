@@ -91,7 +91,7 @@ if [ -f modules_list ]; then
                 # Lancer la remise a zero
                 # ./"$remise_zero"
                 cd "./modules/$module"
-                ./remise_zero.sh
+                ./remise_zero.sh --hard
                 # Revenir au répertoire d'origine
                 cd "$original_dir" || exit
             fi
