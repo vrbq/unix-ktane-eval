@@ -1,21 +1,14 @@
 #!/bin/bash
 
-# # Vérifier si .can_go existe avant de commencer
-# if [ ! -f ".can_go" ]; then
-#     echo "La bombe n'a pas été lancée !"
-#     exit 1
-# fi
-
-# serial=$(cat .serial)
-# # Vérifier que le serial n'est pas vide
-# if [ -z "$serial" ]; then
-#     echo "Erreur : le fichier .serial est vide."
-#     exit 1
-# fi
+# Vérifier si .can_go existe avant de commencer
+if [ ! -f ".can_go" ]; then
+    echo "La bombe n'a pas été lancée !"
+    exit 1
+fi
 
 # Vérifie si chafa est installé
 if ! command -v chafa &> /dev/null; then
-    echo "Le module chafa n'est pas installé. Veuillez l'installer pour continuer."
+    echo "Tous les modules ne sont pas installés ! Veuillez vous référez au manuel"
     exit 1
 fi
 
@@ -31,12 +24,9 @@ fi
 
 # Décode le fichier GIF pour obtenir le mot
 gif_file_base64=$(ls *.gif)
-echo "Le fichier GIF est : $gif_file_base64"
 gif_sans_extension=$(basename "$gif_file_base64" .gif)
 gif_file=$(echo "$gif_sans_extension" | base64 --decode)
-echo "Le fichier GIF décodé est : $gif_file"
 mot=$(echo "$gif_file" | grep -o -E '\w+')
-echo "Le mot est : $mot"
 
 # Fonction pour encoder en base64 le contenu d'un fichier et l'ajouter à .encoded
 encode_and_store() {
@@ -51,9 +41,9 @@ if [ "$mot" == "vitre" ]; then
     encode_and_store "$address"
 
 elif [ "$mot" == "ville" ]; then
-    wget -q https://people.sc.fsu.edu/~jburkardt/data/csv/hw_25000.csv
-    size=$(stat -c %s hw_25000.csv)
-    rm hw_25000.csv
+    wget -q https://tinyurl.com/3xhwvhf2
+    size=$(stat -c %s 3xhwvhf2)
+    rm 3xhwvhf2
     encode_and_store "$size"
 
 elif [ "$mot" == "chose" ]; then
@@ -65,26 +55,25 @@ elif [ "$mot" == "chose" ]; then
     rm .result
 
 elif [ "$mot" == "signe" ]; then
-    wget -q https://people.sc.fsu.edu/~jburkardt/data/csv/hw_25000.csv
-    filetype=$(file -b hw_25000.csv)
-    rm hw_25000.csv
+    wget -q https://tinyurl.com/3xhwvhf2
+    filetype=$(file -b 3xhwvhf2)
+    rm 3xhwvhf2
     encode_and_store "$filetype"
 
 elif [ "$mot" == "linge" ]; then
-    wget -q https://people.sc.fsu.edu/~jburkardt/data/svg/lines02.svg
-    size=$(du -h lines02.svg | awk '{print $1}' | sed 's/K//')
-    echo "La taille du fichier est : $size"
-    rm lines02.svg
+    wget -q https://tinyurl.com/bdcu59dc
+    size=$(du -h bdcu59dc | awk '{print $1}' | sed 's/K//')
+    rm bdcu59dc
     encode_and_store "$size"
 
 elif [ "$mot" == "ligne" ]; then
-    wget -q https://people.sc.fsu.edu/~jburkardt/data/hdf/jet2.hdf
-    filetype=$(file -b jet2.hdf)
-    rm jet2.hdf
+    wget -q https://tinyurl.com/496yn2pj
+    filetype=$(file -b 496yn2pj)
+    rm 496yn2pj
     encode_and_store "$filetype"
 
 elif [ "$mot" == "champ" ]; then
-    ping -c 3 google.fr > .result
+    ping -c 5 google.fr > .result
     domain_name="google.fr"
     packets_transmitted=$(grep -oP '\d+(?= packets transmitted)' .result)
     encode_and_store "$domain_name"
@@ -102,10 +91,9 @@ elif [ "$mot" == "chaud" ]; then
     encode_and_store "$interface_count"
 
 elif [ "$mot" == "bille" ]; then
-    wget -q https://people.sc.fsu.edu/~jburkardt/data/obj/lamp.obj
-    size=$(du -h lamp.obj | awk '{print $1}' | sed 's/K//')
-    echo "La taille du fichier est : $size"
-    rm lamp.obj
+    wget -q https://tinyurl.com/4czaz2jz
+    size=$(du -h 4czaz2jz | awk '{print $1}' | sed 's/K//')
+    rm 4czaz2jz
     encode_and_store "$size"
 
 elif [ "$mot" == "balle" ]; then
