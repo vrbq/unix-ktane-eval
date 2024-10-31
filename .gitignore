@@ -3,6 +3,9 @@
 !.gitignore
 !.gitkeep
 !.gitattributes
+!.liste_personnage.sh
+!.choix.sh
+!.encoded_99
 
 verifications
 log

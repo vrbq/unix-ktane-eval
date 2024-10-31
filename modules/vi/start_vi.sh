@@ -254,25 +254,25 @@ touch modifications
 line_remove=$(get_random_citation)
 printf "Ligne à supprimer : $line_remove\n" > "$modifications_file"
 #Execution script .choix.sh pour connaître l'indice
-annee_line_remove=$(./.choix.sh .encoded_0 $line_remove)
+annee_line_remove=$(./.choix.sh .encoded_99 $line_remove)
 echo "Supprimer la ligne qui correspond à l'$annee_line_remove." > modifications
 
 line_rename=$(get_random_citation)
 printf "Ligne à renommer : $line_rename par le dernier chiffre du serial : $LAST_SERIAL\n" >> "$modifications_file"
 #Execution script .choix.sh pour connaître l'indice
-annee_line_rename=$(./.choix.sh .encoded_0 $line_rename)
+annee_line_rename=$(./.choix.sh .encoded_99 $line_rename)
 echo "Renommer la ligne qui correspond à l'$annee_line_rename par le dernier chiffre du serial." >> modifications
 
 line_remove_quotes=$(get_random_citation)
 printf "Ligne pour supprimer les guillemets : $line_remove_quotes\n" >> "$modifications_file"
 #Execution script .choix.sh pour connaître l'indice
-annee_line_remove_quotes=$(./.choix.sh .encoded_0 $line_remove_quotes)
+annee_line_remove_quotes=$(./.choix.sh .encoded_99 $line_remove_quotes)
 echo "Supprimer les guillemets de la ligne qui correspond à l'$annee_line_remove_quotes." >> modifications
 
 line_remove_author=$(get_random_citation)
 printf "Ligne pour supprimer le nom d'auteur : $line_remove_author\n"  >> "$modifications_file"
 #Execution script .choix.sh pour connaître l'indice
-annee_line_remove_author=$(./.choix.sh .encoded_0 $line_remove_author)
+annee_line_remove_author=$(./.choix.sh .encoded_99 $line_remove_author)
 echo "Supprimer le nom de l'auteur de la citation sur ligne qui correspond à l'$annee_line_remove_author." >> modifications
 
 base64 $modifications_file > .encoded_3
