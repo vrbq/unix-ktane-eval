@@ -1,7 +1,15 @@
 #!/bin/bash
 
-# Durée du compte à rebours en secondes
-initial_time=$((10 * 60))  # Exemple : 5 minutes
+
+
+# Récupération de la durée en minutes depuis l'argument
+if [ -z "$1" ]; then
+    echo "Erreur : durée en minutes non spécifiée."
+    exit 1
+fi
+
+# Conversion de la durée en secondes
+initial_time=$(($1 * 60))  
 
 # Nom du fichier d'actualisation du temps
 time_file="time"
