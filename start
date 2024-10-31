@@ -32,7 +32,6 @@ function choix_difficulte() {
 
 }
 
-choix_difficulte
 
 function choix_nombre_module() {
     
@@ -104,10 +103,12 @@ elif [[ "$1" == "--test-module" ]]; then
 
     # Placez ici le code pour exécuter le module de test
     # par exemple, appeler une fonction ou un autre script
-else
+elif [[ "$1" == "--sur-mesure" ]]; then
     # Liste des mini-jeux à résoudre
-    # mini_games=("fils" "vi" "size")
+    choix_difficulte
     choix_nombre_module
+else
+    mini_games=("fils" "vi" "size" "internet" "processus")
 fi
 
 echo "Mini-jeux sélectionnés : ${mini_games[*]}"
