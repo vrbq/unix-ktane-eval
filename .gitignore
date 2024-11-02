@@ -6,6 +6,7 @@
 !.liste_personnage.sh
 !.choix.sh
 !.encoded_99
+!.monitor.sh
 
 verifications
 log
@@ -18,3 +19,4 @@ time
 citations
 
 ./modules/internet/*.gif
+./modules/size/dir_*/*

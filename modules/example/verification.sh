@@ -55,6 +55,7 @@ increment_error() {
 # if [[ ! -f .encoded_1 || ! -f .encoded_2 ]]; then
 #     echo "Veuillez d'abord lancé le module fils !"
 #     exit 1
+# fi
 
 
 # if $tous_les_autres_fichiers_intacts; then

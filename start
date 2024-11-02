@@ -101,6 +101,8 @@ elif [[ "$1" == "--test-module" ]]; then
         fi
     done
 
+    choix_difficulte
+
     # Placez ici le code pour exécuter le module de test
     # par exemple, appeler une fonction ou un autre script
 elif [[ "$1" == "--sur-mesure" ]]; then
@@ -109,6 +111,7 @@ elif [[ "$1" == "--sur-mesure" ]]; then
     choix_nombre_module
 else
     mini_games=("fils" "vi" "size" "internet" "processus")
+    duration = 30
 fi
 
 echo "Mini-jeux sélectionnés : ${mini_games[*]}"
@@ -207,9 +210,7 @@ fi
 # Afficher le temps restant
 if [ -f .countdown_in_progress ]; then
     echo "La bombe est lancée, le compte à rebours tourne !"
-    if [ -f time ]; then
-        echo "Il vous $(cat time) pour désamorcer la bombe."
-    fi
+    echo "Vous pouvez regarder le temps restant en consultant le fichier time."
 else
     echo "La bombe n'est pas lancée !"
 fi

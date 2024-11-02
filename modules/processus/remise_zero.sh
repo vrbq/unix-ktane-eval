@@ -17,6 +17,11 @@ if [[ "$1" == "--afterResolution" ]]; then
         sudo userdel -r herge > /dev/null 2>&1
     fi
 
+    # Supprimer les groupes et utilisateurs créés
+    if id "castafiore" &>/dev/null; then
+        sudo deluser castafiore
+    fi
+
     # Supprimer les fichiers de configuration
     rm -f .encoded .encoded_2
     rm -f personnages
@@ -45,6 +50,11 @@ else
     # Supprimer l'utilisateur castafiore s'il existe
     if id -u herge >/dev/null 2>&1; then
         sudo userdel -r herge > /dev/null 2>&1
+    fi
+
+    # Supprimer les groupes et utilisateurs créés
+    if id "castafiore" &>/dev/null; then
+        sudo deluser castafiore
     fi
 
     # Supprimer les fichiers de configuration
