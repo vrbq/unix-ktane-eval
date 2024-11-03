@@ -56,8 +56,6 @@ function creation_dossiers() {
     mv $fichier_distant image
 }
 
-echo "L'etape actuelle est $current_step"
-
 # Boucle pour gérer chaque étape jusqu'à la dernière
 while [ $current_step -le 5 ]; do
     # echo "Démarrage de l'étape $current_step..."
@@ -102,8 +100,6 @@ while [ $current_step -le 5 ]; do
     done
 
     ./remise_zero.sh --clean-up-step-OK
-
-    echo "Étape $current_step validée !"
 
     # Passer à l'étape suivante
     ((current_step++))
