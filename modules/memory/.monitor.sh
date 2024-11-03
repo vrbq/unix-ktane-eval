@@ -52,6 +52,8 @@ function creation_dossiers() {
     
     # Encode le nom de ce fichier dans .encoded_X (X = numéro de l'étape actuelle)
     echo "$fichier_distant" > ".encoded_$etape"
+
+    mv $fichier_distant image
 }
 
 echo "L'etape actuelle est $current_step"
@@ -98,6 +100,8 @@ while [ $current_step -le 5 ]; do
     while [ ! -f "$verif_file" ]; do
         sleep 1  # Attendre une seconde avant de vérifier à nouveau
     done
+
+    ./remise_zero.sh --clean-up-step-OK
 
     echo "Étape $current_step validée !"
 

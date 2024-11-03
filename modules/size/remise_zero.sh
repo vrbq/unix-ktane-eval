@@ -18,7 +18,7 @@
 
 # Vérifier si l'option --hard a été fournie
 if [[ "$1" == "--afterResolution" ]]; then
-    echo "Nettoyage des fichiers et répertoires générés après la résolution"
+    # echo "Nettoyage des fichiers et répertoires générés après la résolution"
     cleanup
 else
 

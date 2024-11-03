@@ -108,6 +108,7 @@ case $current_step in
                 if [ -d "basket" ] && find "basket" -type f -name ".encoded_7" | grep -q .; then
                     echo "Bravo ! Vous passez à la prochaine étape !"
                     touch .verif_1
+                    
                 else
                     error_remise_zero
                 fi
@@ -119,6 +120,7 @@ case $current_step in
                 if [ -d "football" ] && find "football" -type f -name ".encoded_2" | grep -q .; then
                     echo "Bravo ! Vous passez à la prochaine étape !"
                     touch .verif_1
+                    
                 else
                     error_remise_zero
                 fi
@@ -129,6 +131,7 @@ case $current_step in
                 if [ -d "handball" ] && find "handball" -type f -name ".encoded_9" | grep -q .; then
                     echo "Bravo ! Vous passez à la prochaine étape !"
                     touch .verif_1
+                    
                 else
                     error_remise_zero
                 fi
@@ -139,6 +142,7 @@ case $current_step in
                 if [ -d "baseball" ] && find "baseball" -type f -name ".encoded_2" | grep -q .; then
                     echo "Bravo ! Vous passez à la prochaine étape !"
                     touch .verif_1
+                    
                 else
                     error_remise_zero
                 fi
@@ -161,7 +165,8 @@ case $current_step in
                     tar -tf basket.tar | grep -q "6/.encoded_6"
                     if [ $? -eq 0 ]; then
                         echo "Bravo ! Vous passez à la prochaine étape !"
-                        touch .verif_1
+                        touch .verif_2
+                        
                     else
                         error_remise_zero
                     fi
@@ -176,7 +181,8 @@ case $current_step in
                 # Étape 2 : vérifier que l'utilisateur "geronimo" existe
                 if id -u geronimo &>/dev/null; then
                     echo "Bravo ! Vous passez à la prochaine étape !"
-                    touch .verif_1
+                    touch .verif_2
+                    
                 else
                     error_remise_zero
                 fi
@@ -190,7 +196,8 @@ case $current_step in
                     tar -tf handball.tar.gz | grep -q "8/.encoded_8"
                     if [ $? -eq 0 ]; then
                         echo "Bravo ! Vous passez à la prochaine étape !"
-                        touch .verif_1
+                        touch .verif_2
+                        
                     else
                         error_remise_zero
                     fi
@@ -219,7 +226,8 @@ case $current_step in
                     tar -tf rugby.tar.gz | grep -q "$expected_file"
                     if [ $? -eq 0 ]; then
                         echo "Bravo ! Vous passez à la prochaine étape !"
-                        touch .verif_1
+                        touch .verif_2
+                        
                     else
                         error_remise_zero
                     fi
@@ -244,19 +252,23 @@ case $current_step in
                 if [ -e "archive_1.tar" ]; then
                     permissions=$(stat -c "%a" "archive_1.tar")
                     if [ "$permissions" -eq 751 ]; then
-                        echo "Bravo ! Permissions vérifiées pour archive_1.tar."
+                        echo "Bravo ! Vous passez à la prochaine étape !"
+                        touch .verif_3
+                    
                     else
-                        echo "Erreur : Permissions non vérifiées pour archive_1.tar."
+                        error_remise_zero
                     fi
                 elif [ -e "archive_1.tar.gz" ]; then
                     permissions=$(stat -c "%a" "archive_1.tar.gz")
                     if [ "$permissions" -eq 751 ]; then
-                        echo "Bravo ! Permissions vérifiées pour archive_1.tar.gz."
+                        echo "Bravo ! Vous passez à la prochaine étape !"
+                        touch .verif_3
+                    
                     else
-                        echo "Erreur : Permissions non vérifiées pour archive_1.tar.gz."
+                        error_remise_zero
                     fi
                 else
-                    echo "Erreur : Aucun fichier archive_1.tar ou archive_1.tar.gz trouvé."
+                    error_remise_zero
                 fi
                 ;;
             2)
@@ -264,19 +276,22 @@ case $current_step in
                 if [ -e "archive_3.tar" ]; then
                     permissions=$(stat -c "%a" "archive_3.tar")
                     if [ "$permissions" -eq 666  ]; then
-                        echo "Bravo ! Permissions vérifiées pour archive_3.tar."
+                        echo "Bravo ! Vous passez à la prochaine étape !"
+                        touch .verif_3
                     else
-                        echo "Erreur : Permissions non vérifiées pour archive_3.tar."
+                        error_remise_zero
                     fi
                 elif [ -e "archive_3.tar.gz" ]; then
                     permissions=$(stat -c "%a" "archive_3.tar.gz")
                     if [ "$permissions" -eq 666  ]; then
-                        echo "Bravo ! Permissions vérifiées pour archive_3.tar.gz."
+                        echo "Bravo ! Vous passez à la prochaine étape !"
+                        touch .verif_3
+                    
                     else
-                        echo "Erreur : Permissions non vérifiées pour archive_3.tar.gz."
+                        error_remise_zero
                     fi
                 else
-                    echo "Erreur : Aucun fichier archive_3.tar ou archive_3.tar.gz trouvé."
+                    error_remise_zero
                 fi
                 ;;
             3)
@@ -284,19 +299,23 @@ case $current_step in
                 if [ -e "archive_5.tar" ]; then
                     permissions=$(stat -c "%a" "archive_5.tar")
                     if [ "$permissions" -eq 711 ]; then
-                        echo "Bravo ! Permissions vérifiées pour archive_5.tar."
+                        echo "Bravo ! Vous passez à la prochaine étape !"
+                        touch .verif_3
+                    
                     else
-                        echo "Erreur : Permissions non vérifiées pour archive_5.tar."
+                        error_remise_zero
                     fi
                 elif [ -e "archive_5.tar.gz" ]; then
                     permissions=$(stat -c "%a" "archive_5.tar.gz")
                     if [ "$permissions" -eq 711 ]; then
-                        echo "Bravo ! Permissions vérifiées pour archive_5.tar.gz."
+                        echo "Bravo ! Vous passez à la prochaine étape !"
+                        touch .verif_3
+                    
                     else
-                        echo "Erreur : Permissions non vérifiées pour archive_5.tar.gz."
+                        error_remise_zero
                     fi
                 else
-                    echo "Erreur : Aucun fichier archive_5.tar ou archive_5.tar.gz trouvé."
+                    error_remise_zero
                 fi
                 ;;
             4)
@@ -304,19 +323,23 @@ case $current_step in
                 if [ -e "archive_4.tar" ]; then
                     permissions=$(stat -c "%a" "archive_4.tar")
                     if [ "$permissions" -eq 644 ]; then
-                        echo "Bravo ! Permissions vérifiées pour archive_4.tar."
+                        echo "Bravo ! Vous passez à la prochaine étape !"
+                        touch .verif_3
+                    
                     else
-                        echo "Erreur : Permissions non vérifiées pour archive_4.tar."
+                        error_remise_zero
                     fi
                 elif [ -e "archive_4.tar.gz" ]; then
                     permissions=$(stat -c "%a" "archive_4.tar.gz")
                     if [ "$permissions" -eq 644 ]; then
-                        echo "Bravo ! Permissions vérifiées pour archive_4.tar.gz."
+                        echo "Bravo ! Vous passez à la prochaine étape !"
+                        touch .verif_3
+                    
                     else
-                        echo "Erreur : Permissions non vérifiées pour archive_4.tar.gz."
+                        error_remise_zero
                     fi
                 else
-                    echo "Erreur : Aucun fichier archive_4.tar ou archive_4.tar.gz trouvé."
+                    error_remise_zero
                 fi
                 ;;
             *)
@@ -329,25 +352,33 @@ case $current_step in
         case $symbol_num in
             1)
                 if [ -f "archive_3.tar.gz" ] && [ "$(stat -c "%U" archive_3.tar.gz 2>/dev/null)" = "geronimo" ]; then
-                    echo "Bravo ! Propriétaire vérifié."
+                    echo "Bravo ! Vous passez à la prochaine étape !"
+                        touch .verif_4
+                        
                 elif [ -f "archive_3.tar" ] && [ "$(stat -c "%U" archive_3.tar 2>/dev/null)" = "geronimo" ]; then
-                    echo "Bravo ! Propriétaire vérifié."
+                    echo "Bravo ! Vous passez à la prochaine étape !"
+                        touch .verif_4
+                        
                 else
-                    echo "Erreur : le propriétaire de archive_3.tar ou archive_3.tar.gz n'est pas 'geronimo' ou aucun des fichiers n'existe."
+                    error_remise_zero
                 fi
                 ;;
             2)
                 if grep -q "^bedonkohe:" /etc/group; then
-                    echo "Bravo ! Groupe vérifié."
+                    echo "Bravo ! Vous passez à la prochaine étape !"
+                    touch .verif_4
+                    
                 else
-                    echo "Erreur : le groupe 'bedonkohe' n'a pas été créé."
+                    error_remise_zero
                 fi
                 ;;
             3)
                 if id -nG geronimo | grep -q "\<bedonkohe\>"; then
-                    echo "Bravo ! Geronimo dans bon groupe."
+                    echo "Bravo ! Vous passez à la prochaine étape !"
+                    touch .verif_4
+                    
                 else
-                    echo "Erreur : bite"
+                    error_remise_zero
                 fi
                 ;;
             4)
@@ -359,20 +390,16 @@ case $current_step in
                     exit 1
                 fi
                 
-                archive_rugby="rugby.tar.gz"
-                
-                # Vérifier les deux types d'archives
-                for archive in "archive_$last_digit.tar" "archive_$last_digit.tar.gz"; do
-                    if [ -f "$archive" ]; then
-                        # Vérifier que l'archive est extraite dans le répertoire "rugby"
-                        if tar -tf $archive_rugby  2>/dev/null  | grep -q ".encoded_$last_digit" ; then
-                            echo "Bravo ! Vérification réussie."
-                        else
-                            echo "Erreur : le fichier '.encoded_$last_digit' n'est pas trouvé dans l'archive '$archive_rugby'."
-                        fi
-                        break
-                    fi
-                done
+                nom_dossier="rugby"
+                archive_name="archive_$last_digit"
+
+                if [ -d $nom_dossier ] && find $nom_dossier -type f -name ".encoded_$last_digit" | grep -q .; then
+                    echo "Bravo ! Vous passez à la prochaine étape !"
+                    touch .verif_4
+                    
+                else
+                    error_remise_zero
+                fi
                 ;;
             *)
                 echo "Erreur : numéro invalide dans .encoded_1."
@@ -381,16 +408,18 @@ case $current_step in
         ;;
     5)
 
+    echo "symbol_num : $symbol_num"
+
         # Vérifier le numéro et afficher les messages appropriés
         if [ "$symbol_num" -eq 1 ]; then
             symbol_num_etape5=$(base64 -d .encoded_1)
+            echo "symbol_num_etape5 : $symbol_num_etape5"
 
                 case $symbol_num_etape5 in
                     1) 
                         {
                             if [ -d "basket" ] && find "basket" -type f -name ".encoded_7" | grep -q .; then
-                                echo "Bravo ! Vous passez à la prochaine étape !"
-                                touch .verif_1
+                                verifier_temps_ecoule
                             else
                                 error_remise_zero
                             fi
@@ -400,8 +429,7 @@ case $current_step in
                     2) 
                         {
                             if [ -d "football" ] && find "football" -type f -name ".encoded_2" | grep -q .; then
-                                echo "Bravo ! Vous passez à la prochaine étape !"
-                                touch .verif_1
+                                verifier_temps_ecoule
                             else
                                 error_remise_zero
                             fi
@@ -410,8 +438,7 @@ case $current_step in
                     3) 
                         {
                             if [ -d "handball" ] && find "handball" -type f -name ".encoded_9" | grep -q .; then
-                                echo "Bravo ! Vous passez à la prochaine étape !"
-                                touch .verif_1
+                                verifier_temps_ecoule
                             else
                                 error_remise_zero
                             fi
@@ -420,8 +447,7 @@ case $current_step in
                     4) 
                         {
                             if [ -d "baseball" ] && find "baseball" -type f -name ".encoded_2" | grep -q .; then
-                                echo "Bravo ! Vous passez à la prochaine étape !"
-                                touch .verif_1
+                                verifier_temps_ecoule
                             else
                                 error_remise_zero
                             fi
@@ -436,6 +462,7 @@ case $current_step in
         elif [ "$symbol_num" -eq 2 ]; then
 
         symbol_num_etape5=$(base64 -d .encoded_2)
+         echo "symbol_num_etape5 : $symbol_num_etape5"
 
         case "$symbol_num_etape5" in
             1)
@@ -444,8 +471,7 @@ case $current_step in
                     if [ -f "basket.tar" ]; then
                         tar -tf basket.tar | grep -q "6/.encoded_6"
                         if [ $? -eq 0 ]; then
-                            echo "Bravo ! Vous passez à la prochaine étape !"
-                            touch .verif_1
+                            verifier_temps_ecoule
                         else
                             error_remise_zero
                         fi
@@ -459,8 +485,7 @@ case $current_step in
                 {
                     # Étape 2 : vérifier que l'utilisateur "geronimo" existe
                     if id -u geronimo &>/dev/null; then
-                        echo "Bravo ! Vous passez à la prochaine étape !"
-                        touch .verif_1
+                        verifier_temps_ecoule
                     else
                         error_remise_zero
                     fi
@@ -473,8 +498,7 @@ case $current_step in
                     if [ -f "handball.tar.gz" ]; then
                         tar -tf handball.tar.gz | grep -q "8/.encoded_8"
                         if [ $? -eq 0 ]; then
-                            echo "Bravo ! Vous passez à la prochaine étape !"
-                            touch .verif_1
+                            verifier_temps_ecoule
                         else
                             error_remise_zero
                         fi
@@ -502,8 +526,7 @@ case $current_step in
                         # Vérifie si le bon dossier est dans l'archive
                         tar -tf rugby.tar.gz | grep -q "$expected_file"
                         if [ $? -eq 0 ]; then
-                            echo "Bravo ! Vous passez à la prochaine étape !"
-                            touch .verif_1
+                            verifier_temps_ecoule
                         else
                             error_remise_zero
                         fi
@@ -516,8 +539,9 @@ case $current_step in
         
         
         
-        elif [ "$symbol_num" -eq 3 ]; then
+        elif [ "$symbol_num" -eq 4 ]; then
             symbol_num_etape5=$(base64 -d .encoded_3)
+             echo "symbol_num_etape5 : $symbol_num_etape5"
 
             case $symbol_num_etape5 in
                 1)
@@ -525,19 +549,19 @@ case $current_step in
                     if [ -e "archive_1.tar" ]; then
                         permissions=$(stat -c "%a" "archive_1.tar")
                         if [ "$permissions" -eq 751 ]; then
-                            echo "Bravo ! Permissions vérifiées pour archive_1.tar."
+                            verifier_temps_ecoule
                         else
-                            echo "Erreur : Permissions non vérifiées pour archive_1.tar."
+                           error_remise_zero
                         fi
                     elif [ -e "archive_1.tar.gz" ]; then
                         permissions=$(stat -c "%a" "archive_1.tar.gz")
                         if [ "$permissions" -eq 751 ]; then
-                            echo "Bravo ! Permissions vérifiées pour archive_1.tar.gz."
+                            verifier_temps_ecoule
                         else
-                            echo "Erreur : Permissions non vérifiées pour archive_1.tar.gz."
+                            error_remise_zero
                         fi
                     else
-                        echo "Erreur : Aucun fichier archive_1.tar ou archive_1.tar.gz trouvé."
+                        error_remise_zero
                     fi
                     ;;
                 2)
@@ -545,19 +569,19 @@ case $current_step in
                     if [ -e "archive_3.tar" ]; then
                         permissions=$(stat -c "%a" "archive_3.tar")
                         if [ "$permissions" -eq 666  ]; then
-                            echo "Bravo ! Permissions vérifiées pour archive_3.tar."
+                            verifier_temps_ecoule
                         else
-                            echo "Erreur : Permissions non vérifiées pour archive_3.tar."
+                            error_remise_zero
                         fi
                     elif [ -e "archive_3.tar.gz" ]; then
                         permissions=$(stat -c "%a" "archive_3.tar.gz")
                         if [ "$permissions" -eq 666  ]; then
-                            echo "Bravo ! Permissions vérifiées pour archive_3.tar.gz."
+                            verifier_temps_ecoule
                         else
-                            echo "Erreur : Permissions non vérifiées pour archive_3.tar.gz."
+                            error_remise_zero
                         fi
                     else
-                        echo "Erreur : Aucun fichier archive_3.tar ou archive_3.tar.gz trouvé."
+                        error_remise_zero
                     fi
                     ;;
                 3)
@@ -565,19 +589,19 @@ case $current_step in
                     if [ -e "archive_5.tar" ]; then
                         permissions=$(stat -c "%a" "archive_5.tar")
                         if [ "$permissions" -eq 711 ]; then
-                            echo "Bravo ! Permissions vérifiées pour archive_5.tar."
+                            verifier_temps_ecoule
                         else
-                            echo "Erreur : Permissions non vérifiées pour archive_5.tar."
+                            error_remise_zero
                         fi
                     elif [ -e "archive_5.tar.gz" ]; then
                         permissions=$(stat -c "%a" "archive_5.tar.gz")
                         if [ "$permissions" -eq 711 ]; then
-                            echo "Bravo ! Permissions vérifiées pour archive_5.tar.gz."
+                            verifier_temps_ecoule
                         else
-                            echo "Erreur : Permissions non vérifiées pour archive_5.tar.gz."
+                            error_remise_zero
                         fi
                     else
-                        echo "Erreur : Aucun fichier archive_5.tar ou archive_5.tar.gz trouvé."
+                        error_remise_zero
                     fi
                     ;;
                 4)
@@ -585,49 +609,51 @@ case $current_step in
                     if [ -e "archive_4.tar" ]; then
                         permissions=$(stat -c "%a" "archive_4.tar")
                         if [ "$permissions" -eq 644 ]; then
-                            echo "Bravo ! Permissions vérifiées pour archive_4.tar."
+                            verifier_temps_ecoule
                         else
-                            echo "Erreur : Permissions non vérifiées pour archive_4.tar."
+                            error_remise_zero
                         fi
                     elif [ -e "archive_4.tar.gz" ]; then
                         permissions=$(stat -c "%a" "archive_4.tar.gz")
                         if [ "$permissions" -eq 644 ]; then
-                            echo "Bravo ! Permissions vérifiées pour archive_4.tar.gz."
+                            verifier_temps_ecoule
                         else
-                            echo "Erreur : Permissions non vérifiées pour archive_4.tar.gz."
+                            error_remise_zero
                         fi
                     else
-                        echo "Erreur : Aucun fichier archive_4.tar ou archive_4.tar.gz trouvé."
+                        error_remise_zero
                     fi
                     ;;
                 *)
 
         esac
         
-        elif [ "$symbol_num" -eq 4 ]; then
+        elif [ "$symbol_num" -eq 3 ]; then
             symbol_num_etape5=$(base64 -d .encoded_4)
+             echo "symbol_num_etape5 : $symbol_num_etape5"
+
             case $symbol_num_etape5 in
                 1)
                     if [ -f "archive_3.tar.gz" ] && [ "$(stat -c "%U" archive_3.tar.gz 2>/dev/null)" = "geronimo" ]; then
-                        echo "Bravo ! Propriétaire vérifié."
+                        verifier_temps_ecoule
                     elif [ -f "archive_3.tar" ] && [ "$(stat -c "%U" archive_3.tar 2>/dev/null)" = "geronimo" ]; then
-                        echo "Bravo ! Propriétaire vérifié."
+                        verifier_temps_ecoule
                     else
-                        echo "Erreur : le propriétaire de archive_3.tar ou archive_3.tar.gz n'est pas 'geronimo' ou aucun des fichiers n'existe."
+                        error_remise_zero
                     fi
                     ;;
                 2)
                     if grep -q "^bedonkohe:" /etc/group; then
-                        echo "Bravo ! Groupe vérifié."
+                        verifier_temps_ecoule
                     else
-                        echo "Erreur : le groupe 'bedonkohe' n'a pas été créé."
+                        error_remise_zero
                     fi
                     ;;
                 3)
                     if id -nG geronimo | grep -q "\<bedonkohe\>"; then
-                        echo "Bravo ! Geronimo dans bon groupe."
+                        verifier_temps_ecoule
                     else
-                        echo "Erreur : bite"
+                        error_remise_zero
                     fi
                     ;;
                 4)
@@ -639,23 +665,25 @@ case $current_step in
                         exit 1
                     fi
                     
-                    archive_rugby="rugby.tar.gz"
+                    if [ -f ".serial" ]; then
+                    serial=$(cat .serial)
+                    last_digit=${serial: -1}  # Récupérer le dernier chiffre
+                    else
+                        echo "Erreur : fichier .serial introuvable."
+                        exit 1
+                    fi
                     
-                    # Vérifier les deux types d'archives
-                    for archive in "archive_$last_digit.tar" "archive_$last_digit.tar.gz"; do
-                        if [ -f "$archive" ]; then
-                            # Vérifier que l'archive est extraite dans le répertoire "rugby"
-                            if tar -tf $archive_rugby  2>/dev/null  | grep -q ".encoded_$last_digit" ; then
-                                echo "Bravo ! Vérification réussie."
-                            else
-                                echo "Erreur : le fichier '.encoded_$last_digit' n'est pas trouvé dans l'archive '$archive_rugby'."
-                            fi
-                            break
-                        fi
-                    done
+                    nom_dossier="rugby"
+                    archive_name="archive_$last_digit"
+
+                    if [ -d $nom_dossier ] && find $nom_dossier -type f -name ".encoded_$last_digit" | grep -q .; then
+                        verifier_temps_ecoule
+                    else
+                        error_remise_zero
+                    fi
                     ;;
                 *)
-                    echo "Erreur : numéro invalide dans .encoded_1."
+                    echo "Erreur : numéro d'étape invalide."
                     ;;
             esac
         else
