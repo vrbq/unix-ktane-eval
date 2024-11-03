@@ -5,8 +5,11 @@
 function afficher_aide() {
     echo "Utilisation : $0 [options]"
     echo "Options :"
-    echo "  --test-module  Exécute le module de test."
+    echo "  -h             Affiche cette aide."
     echo "  --help         Affiche cette aide."
+    echo "  --level X      Lance le niveau X."
+    echo "  --test-module  Exécute le module de test."
+    echo "  --sur-mesure   Bombe sur mesure."
 }
 
 function choix_difficulte() {
@@ -65,9 +68,29 @@ function choix_nombre_module() {
 
 }
 
+function nombre_module_hasard() {
+
+    nombre_module=$1
+    
+    # Lecture du fichier de modules et comptage du nombre de lignes
+    modules_list_file="modules_list"
+    mapfile -t modules < "$modules_list_file"
+    total_modules=${#modules[@]}
+
+    # Sélection des modules choisis au hasard
+    selected_modules=($(shuf -e "${modules[@]}" -n "$nombre_module"))
+    echo "Modules sélectionnés : ${selected_modules[*]}"
+
+    # Stockage des modules dans la variable mini_games
+    mini_games=("${selected_modules[@]}")
+
+}
+
+max_errors=3
+
 
 # Vérifier les arguments
-if [[ "$1" == "--help" ]]; then
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
     afficher_aide
     exit 0
 elif [[ "$1" == "--test-module" ]]; then
@@ -102,19 +125,130 @@ elif [[ "$1" == "--test-module" ]]; then
     done
 
     choix_difficulte
-
-    # Placez ici le code pour exécuter le module de test
-    # par exemple, appeler une fonction ou un autre script
 elif [[ "$1" == "--sur-mesure" ]]; then
     # Liste des mini-jeux à résoudre
     choix_difficulte
     choix_nombre_module
+elif [[ "$1" == "--level" ]]; then
+
+    level_number="$2"
+    if [[ "$level_number" == "0" ]]; then
+        mini_games=("fils")
+        duration=50
+        max_errors=7
+    elif [[ "$level_number" == "1" ]]; then
+        mini_games=("citations")
+        duration=50
+        max_errors=7
+    elif [[ "$level_number" == "2" ]]; then
+        mini_games=("fils" "citations")
+        duration=50
+        max_errors=5
+    elif [[ "$level_number" == "3" ]]; then
+        mini_games=("alphabet")
+        duration=40
+        max_errors=5
+     elif [[ "$level_number" == "4" ]]; then
+        mini_games=("morse")
+        duration=40
+        max_errors=5
+    elif [[ "$level_number" == "5" ]]; then
+        mini_games=("tintin")
+        duration=40
+        max_errors=7
+    elif [[ "$level_number" == "6" ]]; then
+        mini_games=("cities")
+        duration=40
+        max_errors=5
+    elif [[ "$level_number" == "7" ]]; then
+        mini_games=("memory")
+        duration=40
+        max_errors=5
+     elif [[ "$level_number" == "8" ]]; then
+        mini_games=("alphabet" "morse")
+        duration=40
+        max_errors=4
+     elif [[ "$level_number" == "9" ]]; then
+        mini_games=("tintin" "cities")
+        duration=40
+        max_errors=4
+    elif [[ "$level_number" == "10" ]]; then
+        mini_games=("memory" "citations")
+        duration=40
+        max_errors=4
+    elif [[ "$level_number" == "11" ]]; then
+        nombre_module_hasard 2
+        duration=30
+        max_errors=4
+    elif [[ "$level_number" == "12" ]]; then
+        nombre_module_hasard 3
+        duration=30
+        max_errors=4
+    elif [[ "$level_number" == "13" ]]; then
+        nombre_module_hasard 3
+        duration=30
+        max_errors=3
+     elif [[ "$level_number" == "14" ]]; then
+        nombre_module_hasard 4
+        duration=30
+        max_errors=3
+    elif [[ "$level_number" == "15" ]]; then
+        nombre_module_hasard 3
+        duration=30
+        max_errors=2
+    elif [[ "$level_number" == "16" ]]; then
+        nombre_module_hasard 4
+        duration=30
+        max_errors=2
+    elif [[ "$level_number" == "17" ]]; then
+        nombre_module_hasard 3
+        duration=20
+        max_errors=1
+     elif [[ "$level_number" == "18" ]]; then
+        nombre_module_hasard 3
+        duration=20
+        max_errors=1
+    elif [[ "$level_number" == "19" ]]; then
+        nombre_module_hasard 5
+        duration=30
+        max_errors=3
+    elif [[ "$level_number" == "20" ]]; then
+        nombre_module_hasard 6
+        duration=30
+        max_errors=3
+    elif [[ "$level_number" == "21" ]]; then
+        nombre_module_hasard 7
+        duration=30
+        max_errors=3
+    elif [[ "$level_number" == "22" ]]; then
+        nombre_module_hasard 7
+        duration=20
+        max_errors=3
+    elif [[ "$level_number" == "23" ]]; then
+        nombre_module_hasard 7
+        duration=10
+        max_errors=3
+     elif [[ "$level_number" == "24" ]]; then
+        nombre_module_hasard 7
+        duration=10
+        max_errors=1
+    elif [[ "$level_number" == "99" ]]; then
+        nombre_module_hasard 7
+        duration=5
+        max_errors=0
+    else
+        echo "Niveau invalide."
+        exit 1
+    fi
 else
-    mini_games=("fils" "vi" "size" "internet" "processus")
-    duration = 30
+    # Tous les modules
+    mini_games=("fils" "citations" "alphabet" "morse" "tintin" "cities" "memory")
+    duration=30
 fi
 
-echo "Mini-jeux sélectionnés : ${mini_games[*]}"
+# echo "Mini-jeux sélectionnés : ${mini_games[*]}"
+
+echo "Durée du compte à rebours : $duration minutes"
 
 
 #Remise a zero du jeu
@@ -127,19 +261,19 @@ echo "Mini-jeux sélectionnés : ${mini_games[*]}"
 # Sauvegarder la liste dans un fichier caché
 for game in "${mini_games[@]}"; do
     # Afficher le nom du mini-jeu en cours
-    echo "Lancement du mini-jeu : $game"
+    # echo "Lancement du mini-jeu : $game"
     # Écrire le nom du mini-jeu dans le fichier
     echo "$game" >> mini_games_list
 done
 
-echo "Liste des mini-jeux sauvegardée dans mini_games_list : $(cat mini_games_list)"
+# echo "Liste des mini-jeux sauvegardée dans mini_games_list : $(cat mini_games_list)"
 
 
 # Vérifier si le fichier modules_list existe
 if [ -f mini_games_list ]; then
     # Parcourir chaque ligne du fichier
     while IFS= read -r module || [[ -n "$module" ]]; do
-        echo "Module : $module"
+        echo "Module à désamorcer : $module"
         # Si le module est le module "internet"
         if [[ "$module" == "internet" ]]; then
             # Copier un gif dans le répertoire du module
@@ -181,7 +315,9 @@ else
 fi
 
 # Lancer le check du status de la bombe
-./check_bomb_status.sh &
+./check_bomb_status.sh $max_errors &
+
+echo "Vous aurez le droit à $max_errors erreurs avant que la bombe n'explose."
 
 # Boucle tant que le processus check_bomb_status.sh n'est pas trouvé
 check_status_pid=$(ps aux | grep '[c]heck_bomb_status.sh' | awk '{print $2}')

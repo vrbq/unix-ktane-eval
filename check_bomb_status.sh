@@ -9,7 +9,7 @@ time_file="time"
 # Fichier qui contient le statut des erreurs
 error_status_file="error_status"
 total_errors=0
-max_errors=3  # Nombre maximum d'erreurs avant la perte de la partie
+max_errors=$1  # Nombre maximum d'erreurs avant la perte de la partie
 
 # Déclaration d'un tableau pour stocker l'état actuel des erreurs dans chaque module
 declare -A previous_error_values

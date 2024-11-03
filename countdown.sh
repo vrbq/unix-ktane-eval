@@ -1,7 +1,6 @@
 #!/bin/bash
 
 
-
 # Récupération de la durée en minutes depuis l'argument
 if [ -z "$1" ]; then
     echo "Erreur : durée en minutes non spécifiée."
