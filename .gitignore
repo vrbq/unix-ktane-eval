@@ -16,7 +16,7 @@ serial
 error_status
 mini_games_list
 time
-citations
+citations.txt
 
 ./modules/internet/*.gif
 ./modules/size/dir_*/*

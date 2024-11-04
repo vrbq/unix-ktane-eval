@@ -228,10 +228,38 @@ elif [[ "$1" == "--level" ]]; then
         nombre_module_hasard 7
         duration=10
         max_errors=3
-     elif [[ "$level_number" == "24" ]]; then
+    elif [[ "$level_number" == "24" ]]; then
         nombre_module_hasard 7
         duration=10
         max_errors=1
+    elif [[ "$level_number" == "30" ]]; then
+        nombre_module_hasard 1
+        duration=10
+        max_errors=3
+    elif [[ "$level_number" == "31" ]]; then
+        nombre_module_hasard 2
+        duration=10
+        max_errors=3
+    elif [[ "$level_number" == "32" ]]; then
+        nombre_module_hasard 3
+        duration=10
+        max_errors=3
+    elif [[ "$level_number" == "33" ]]; then
+        nombre_module_hasard 4
+        duration=10
+        max_errors=3
+    elif [[ "$level_number" == "34" ]]; then
+        nombre_module_hasard 5
+        duration=10
+        max_errors=3
+    elif [[ "$level_number" == "35" ]]; then
+        nombre_module_hasard 6
+        duration=10
+        max_errors=3
+    elif [[ "$level_number" == "36" ]]; then
+        nombre_module_hasard 7
+        duration=10
+        max_errors=3
     elif [[ "$level_number" == "99" ]]; then
         nombre_module_hasard 7
         duration=5
