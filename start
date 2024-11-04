@@ -306,7 +306,7 @@ if [ -f mini_games_list ]; then
         if [[ "$module" == "morse" ]]; then
             # Copier un gif dans le répertoire du module
             src="./utils/morse"
-            dest="./modules/internet"
+            dest="./modules/morse"
             gif=$(find "$src" -name "*.gif" | shuf -n 1)
             cp "$gif" "$dest"
         fi
