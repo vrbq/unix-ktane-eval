@@ -104,7 +104,6 @@ create_directory_structure() {
     # Trouver le chemin vers le répertoire de la ville sélectionnée
     # city_path=$(find "$dossier_racine" -type d -name "$random_city" 2>/dev/null)
     city_path=$(find "$dossier_racine" -type d -name "$random_city" 2>/dev/null | sed 's|^\./||')
-    echo "Le chemin vers le répertoire de la ville $random_city est : $city_path"
     root_path=$(pwd)
     root_plus_city_path="$root_path/$city_path"
     echo "$root_plus_city_path" | base64 > .encoded_1
