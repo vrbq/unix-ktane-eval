@@ -153,7 +153,7 @@ echo -e "$filename\n$directory" | base64 > .encoded
 modifications=()
 
 # Définir le fichier de citations
-citation_file="citations"
+citation_file="citations.txt"
 
 # Créer un fichier pour enregistrer les modifications
 modifications_file=".encoded_3_temp"
