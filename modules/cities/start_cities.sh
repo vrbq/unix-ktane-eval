@@ -16,8 +16,6 @@ if [[ ! -f .start_time ]]; then
     echo $start_time > .start_time
 fi
 
-echo "La bombe a été lancée !"
-
 
 create_directory_structure() {
     # Configuration

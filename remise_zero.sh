@@ -13,6 +13,9 @@ rm -f category
 rm -f log
 rm -f .check_status_pid
 
+pkill -f "countdown"
+pkill -f "check_bomb_status"
+
 stop_the_bomb() {
 
         # Vérifier s'il y a un processus check_bomb_status en cours et l'arrêter

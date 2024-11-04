@@ -38,6 +38,7 @@ echo "$random_number" | base64 > .encoded
 # Lancer le script .liste_personnage.sh en arrière-plan pour afficher les personnages
 ./.liste_personnage.sh "$random_number" &
 
+
 # Actions spécifiques en fonction du nombre choisi
 if [ "$random_number" -eq 1 ]; then
     sudo -u root ./.tintin_or_noir.sh &

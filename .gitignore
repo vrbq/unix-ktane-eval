@@ -18,5 +18,5 @@ mini_games_list
 time
 citations.txt
 
-./modules/internet/*.gif
-./modules/size/dir_*/*
+./modules/morse/*.gif
+./modules/alphabet/dir_*/*

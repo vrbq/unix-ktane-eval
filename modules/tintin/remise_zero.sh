@@ -28,7 +28,13 @@ if [[ "$1" == "--afterResolution" ]]; then
     rm -f .tintin_tibet.sh .tintin_or_noir.sh .tintin_objectif_lune.sh .tintin_picaros.sh .tintin_etudie_en_TC.sh
 
     # Terminer tous les processus de l'exercice
-    pkill -9 -f "tintin"
+    for pid in $(pgrep -f tintin); do
+        # Vérifier si le processus n'est pas start_tintin
+        if ! ps -p $pid -o comm= | grep -q "start_tintin.sh"; then
+            kill $pid > /dev/null 2>&1
+        fi
+    done
+
     pkill -f "sleep 3600"
 
 else
@@ -63,7 +69,13 @@ else
     rm -f .tintin_tibet.sh .tintin_or_noir.sh .tintin_objectif_lune.sh .tintin_picaros.sh .tintin_etudie_en_TC.sh
 
     # Terminer tous les processus de l'exercice
-    pkill -9 -f "tintin"
+    for pid in $(pgrep -f tintin); do
+        # Vérifier si le processus n'est pas start_tintin
+        if ! ps -p $pid -o comm= | grep -q "start_tintin.sh"; then
+            kill $pid > /dev/null 2>&1
+        fi
+    done
+
     pkill -f "sleep 3600"
 
     # Vérifier si l'option --hard a été fournie
