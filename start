@@ -303,7 +303,7 @@ if [ -f mini_games_list ]; then
     while IFS= read -r module || [[ -n "$module" ]]; do
         echo "Module à désamorcer : $module"
         # Si le module est le module "internet"
-        if [[ "$module" == "internet" ]]; then
+        if [[ "$module" == "morse" ]]; then
             # Copier un gif dans le répertoire du module
             src="./utils/morse"
             dest="./modules/internet"
