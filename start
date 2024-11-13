@@ -86,193 +86,20 @@ function nombre_module_hasard() {
 
 }
 
-max_errors=3
+
 
 
 # Vérifier les arguments
 if [[ "$1" == "--help" || "$1" == "-h" ]]; then
     afficher_aide
     exit 0
-elif [[ "$1" == "--test-module" ]]; then
-    echo "Exécution du module de test..."
-
-    # Charger les noms dans un tableau, en utilisant les retours à la ligne comme séparateurs
-    mapfile -t mini_game_names < modules_list  # Remplace les retours à la ligne par des espaces
-    
-   # Fonction pour afficher la liste des noms
-    function afficher_noms {
-        echo "Choisissez un nom parmi la liste suivante :"
-        for i in "${!mini_game_names[@]}"; do
-            echo "$((i + 1)). ${mini_game_names[i]}"
-        done
-    }
-
-    # Demande de choix
-    while true; do
-        afficher_noms
-        read -p "Entrez le numéro du nom choisi : " choix
-        index=$((choix - 1))
-
-        # Vérifier si le choix est valide
-        if [[ $index -ge 0 && $index -lt ${#mini_game_names[@]} ]]; then
-            nom="${mini_game_names[index]}"
-            echo "Vous avez choisi : $nom"
-            mini_games=($nom) 
-            break  # Sortir de la boucle
-        else
-            echo "Sélection invalide. Veuillez choisir un numéro de la liste."
-        fi
-    done
-
-    choix_difficulte
-elif [[ "$1" == "--sur-mesure" ]]; then
-    # Liste des mini-jeux à résoudre
-    choix_difficulte
-    choix_nombre_module
-elif [[ "$1" == "--level" ]]; then
-
-    level_number="$2"
-    if [[ "$level_number" == "0" ]]; then
-        mini_games=("fils")
-        duration=50
-        max_errors=7
-    elif [[ "$level_number" == "1" ]]; then
-        mini_games=("citations")
-        duration=50
-        max_errors=7
-    elif [[ "$level_number" == "2" ]]; then
-        mini_games=("fils" "citations")
-        duration=50
-        max_errors=5
-    elif [[ "$level_number" == "3" ]]; then
-        mini_games=("alphabet")
-        duration=40
-        max_errors=5
-     elif [[ "$level_number" == "4" ]]; then
-        mini_games=("morse")
-        duration=40
-        max_errors=5
-    elif [[ "$level_number" == "5" ]]; then
-        mini_games=("tintin")
-        duration=40
-        max_errors=7
-    elif [[ "$level_number" == "6" ]]; then
-        mini_games=("cities")
-        duration=40
-        max_errors=5
-    elif [[ "$level_number" == "7" ]]; then
-        mini_games=("memory")
-        duration=40
-        max_errors=5
-     elif [[ "$level_number" == "8" ]]; then
-        mini_games=("alphabet" "morse")
-        duration=40
-        max_errors=4
-     elif [[ "$level_number" == "9" ]]; then
-        mini_games=("tintin" "cities")
-        duration=40
-        max_errors=4
-    elif [[ "$level_number" == "10" ]]; then
-        mini_games=("memory" "citations")
-        duration=40
-        max_errors=4
-    elif [[ "$level_number" == "11" ]]; then
-        nombre_module_hasard 2
-        duration=30
-        max_errors=4
-    elif [[ "$level_number" == "12" ]]; then
-        nombre_module_hasard 3
-        duration=30
-        max_errors=4
-    elif [[ "$level_number" == "13" ]]; then
-        nombre_module_hasard 3
-        duration=30
-        max_errors=3
-     elif [[ "$level_number" == "14" ]]; then
-        nombre_module_hasard 4
-        duration=30
-        max_errors=3
-    elif [[ "$level_number" == "15" ]]; then
-        nombre_module_hasard 3
-        duration=30
-        max_errors=2
-    elif [[ "$level_number" == "16" ]]; then
-        nombre_module_hasard 4
-        duration=30
-        max_errors=2
-    elif [[ "$level_number" == "17" ]]; then
-        nombre_module_hasard 3
-        duration=20
-        max_errors=1
-     elif [[ "$level_number" == "18" ]]; then
-        nombre_module_hasard 3
-        duration=20
-        max_errors=1
-    elif [[ "$level_number" == "19" ]]; then
-        nombre_module_hasard 5
-        duration=30
-        max_errors=3
-    elif [[ "$level_number" == "20" ]]; then
-        nombre_module_hasard 6
-        duration=30
-        max_errors=3
-    elif [[ "$level_number" == "21" ]]; then
-        nombre_module_hasard 7
-        duration=30
-        max_errors=3
-    elif [[ "$level_number" == "22" ]]; then
-        nombre_module_hasard 7
-        duration=20
-        max_errors=3
-    elif [[ "$level_number" == "23" ]]; then
-        nombre_module_hasard 7
-        duration=10
-        max_errors=3
-    elif [[ "$level_number" == "24" ]]; then
-        nombre_module_hasard 7
-        duration=10
-        max_errors=1
-    elif [[ "$level_number" == "30" ]]; then
-        nombre_module_hasard 1
-        duration=10
-        max_errors=3
-    elif [[ "$level_number" == "31" ]]; then
-        nombre_module_hasard 2
-        duration=10
-        max_errors=3
-    elif [[ "$level_number" == "32" ]]; then
-        nombre_module_hasard 3
-        duration=10
-        max_errors=3
-    elif [[ "$level_number" == "33" ]]; then
-        nombre_module_hasard 4
-        duration=10
-        max_errors=3
-    elif [[ "$level_number" == "34" ]]; then
-        nombre_module_hasard 5
-        duration=10
-        max_errors=3
-    elif [[ "$level_number" == "35" ]]; then
-        nombre_module_hasard 6
-        duration=10
-        max_errors=3
-    elif [[ "$level_number" == "36" ]]; then
-        nombre_module_hasard 7
-        duration=10
-        max_errors=3
-    elif [[ "$level_number" == "99" ]]; then
-        nombre_module_hasard 7
-        duration=5
-        max_errors=0
-    else
-        echo "Niveau invalide."
-        exit 1
-    fi
-else
-    # Tous les modules
-    mini_games=("fils" "citations" "alphabet" "morse" "tintin" "cities" "memory")
-    duration=30
 fi
+
+# Tous les modules
+mini_games=("memory")
+duration=10
+max_errors=10
+
 
 # echo "Mini-jeux sélectionnés : ${mini_games[*]}"
 
@@ -303,13 +130,6 @@ if [ -f mini_games_list ]; then
     while IFS= read -r module || [[ -n "$module" ]]; do
         echo "Module à désamorcer : $module"
         # Si le module est le module "internet"
-        if [[ "$module" == "morse" ]]; then
-            # Copier un gif dans le répertoire du module
-            src="./utils/morse"
-            dest="./modules/morse"
-            gif=$(find "$src" -name "*.gif" | shuf -n 1)
-            cp "$gif" "$dest"
-        fi
 
         # Vérifier si la ligne n'est pas vide
         if [[ -n "$module" ]]; then
