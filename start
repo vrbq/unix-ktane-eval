@@ -97,7 +97,7 @@ fi
 
 # Tous les modules
 mini_games=("memory")
-duration=10
+duration=15
 max_errors=10
 
 
