@@ -251,7 +251,7 @@ case $current_step in
                  # Vérification pour archive_1
                 if [ -e "archive_1.tar" ]; then
                     permissions=$(stat -c "%a" "archive_1.tar")
-                    if [ "$permissions" -eq 751 ]; then
+                    if [ "$permissions" -eq 754 ]; then
                         echo "Bravo ! Vous passez à la prochaine étape !"
                         touch .verif_3
                     
@@ -260,7 +260,7 @@ case $current_step in
                     fi
                 elif [ -e "archive_1.tar.gz" ]; then
                     permissions=$(stat -c "%a" "archive_1.tar.gz")
-                    if [ "$permissions" -eq 751 ]; then
+                    if [ "$permissions" -eq 754 ]; then
                         echo "Bravo ! Vous passez à la prochaine étape !"
                         touch .verif_3
                     
